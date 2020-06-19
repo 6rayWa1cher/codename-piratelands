@@ -2,12 +2,14 @@
 #define HERO_H
 #include <QObject>
 #include <memory>
+#include "ship.h"
 #include "world.h"
 
 class Hero : public QObject {
     Q_OBJECT
 
-protected:
+public:
+    Ship* ship;
     QString _name;
     int _health;
     int _money;

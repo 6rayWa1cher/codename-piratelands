@@ -18,14 +18,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     game.cpp \
     hero.cpp \
+    item.cpp \
     main.cpp \
     mainwindow.cpp \
+    ship.cpp \
     world.cpp
 
 HEADERS += \
     game.h \
     hero.h \
+    item.h \
     mainwindow.h \
+    ship.h \
     world.h
 
 FORMS += \
