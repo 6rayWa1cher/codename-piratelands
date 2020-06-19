@@ -24,6 +24,5 @@ public slots:
     void moveEast();
     void moveWest();
     void moveSouth();
-
 };
 #endif // MAINWINDOW_H
