@@ -5,6 +5,10 @@
 #include "ship.h"
 #include "world.h"
 
+class Item;
+
+enum class ItemType;
+
 class Hero : public QObject {
     Q_OBJECT
 
@@ -14,6 +18,7 @@ public:
     int _health;
     int _money;
     std::shared_ptr<World> _world;
+    QMap<ItemType, QList<std::shared_ptr<Item>>> inventory;
     int _currentRoom;
 
 public:
