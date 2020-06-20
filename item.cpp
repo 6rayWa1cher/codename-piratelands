@@ -10,8 +10,19 @@ KeyItem::KeyItem(QString name, QString description, uint32_t price) :
 
 }
 
+
 ItemType KeyItem::getType() const noexcept {
     return ItemType::KEY_ITEM;
+}
+
+std::shared_ptr<Item> KeyItem::changeAmount(int delta) const
+{
+    switch(delta) {
+    case -1:
+        return nullptr;
+    default:
+        throw new std::exception();
+    }
 }
 
 HeroItem::HeroItem(QString name, QString description, uint32_t price,
@@ -30,9 +41,30 @@ ItemType HeroConsumable::getType() const noexcept {
     return ItemType::HERO_CONSUMABLE;
 }
 
+std::shared_ptr<Item> HeroConsumable::changeAmount(int delta) const
+{
+    if (delta < 0 && static_cast<uint32_t>(-delta) > amount) {
+        return nullptr;
+    }
+    std::shared_ptr<HeroConsumable> copy = this->clone();
+    copy->amount += delta;
+    return copy;
+}
+
 HeroEquipment::HeroEquipment(QString name, QString description, uint32_t price) :
     HeroItem(name, description, price, 1) {
 
+}
+
+
+std::shared_ptr<Item> HeroEquipment::changeAmount(int delta) const
+{
+    switch(delta) {
+    case -1:
+        return nullptr;
+    default:
+        throw new std::exception();
+    }
 }
 
 HeroWeapon::HeroWeapon(QString name, QString description, uint32_t rawDamage,
@@ -102,10 +134,30 @@ ItemType ShipConsumable::getType() const noexcept {
     return ItemType::SHIP_CONSUMABLE;
 }
 
+std::shared_ptr<Item> ShipConsumable::changeAmount(int delta) const
+{
+    if (delta < 0 && static_cast<uint32_t>(-delta) > amount) {
+        return nullptr;
+    }
+    std::shared_ptr<ShipConsumable> copy = this->clone();
+    copy->amount += delta;
+    return copy;
+}
+
 
 ShipEquipment::ShipEquipment(QString name, QString description, uint32_t price) :
     ShipItem(name, description, price, 1){
 
+}
+
+std::shared_ptr<Item> ShipEquipment::changeAmount(int delta) const
+{
+    switch(delta) {
+    case -1:
+        return nullptr;
+    default:
+        throw new std::exception();
+    }
 }
 
 ShipCannons::ShipCannons(QString name, QString description, uint8_t rawDamage,

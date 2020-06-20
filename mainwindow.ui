@@ -160,7 +160,7 @@
      <attribute name="title">
       <string>Характеристики</string>
      </attribute>
-     <widget class="QTableView" name="tableView">
+     <widget class="QTableView" name="characteristics_inventorty_view">
       <property name="geometry">
        <rect>
         <x>330</x>

@@ -1,9 +1,9 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include "hero.h"
-
 #include <QString>
+#include <memory>
+#include "hero.h"
 
 enum class ItemType {
     KEY_ITEM = 0,
@@ -17,6 +17,8 @@ enum class ItemType {
     SHIP_SAIL
 };
 
+const ItemType LAST_ITEM_TYPE = ItemType::SHIP_SAIL;
+
 class Item : public std::enable_shared_from_this<Item> {
 public:
     const QString name;
@@ -25,12 +27,14 @@ public:
     uint32_t amount;
     Item(QString name, QString description, uint32_t price = 0, uint32_t amount = 1);
     virtual ItemType getType() const noexcept = 0;
+    virtual std::shared_ptr<Item> changeAmount(int delta) const = 0;
 };
 
 class KeyItem : public Item {
 public:
     KeyItem(QString name, QString description, uint32_t price = 0);
     ItemType getType() const noexcept override;
+    std::shared_ptr<Item> changeAmount(int delta) const override;
 };
 
 class HeroItem : public Item {
@@ -44,12 +48,15 @@ public:
                    uint32_t amount = 1);
     virtual std::shared_ptr<HeroConsumable> consume(Hero* hero) = 0;
     ItemType getType() const noexcept override;
+    std::shared_ptr<Item> changeAmount(int delta) const override;
+    virtual std::shared_ptr<HeroConsumable> clone() const = 0;
 };
 
 class HeroEquipment : public HeroItem {
 public:
     HeroEquipment(QString name, QString description, uint32_t price = 0);
     virtual void equip(Hero* hero) = 0;
+    std::shared_ptr<Item> changeAmount(int delta) const override;
 };
 
 class HeroWeapon : public HeroEquipment {
@@ -98,19 +105,22 @@ public:
                    uint32_t amount = 1);
     virtual std::shared_ptr<HeroConsumable> consume(Hero* hero) = 0;
     ItemType getType() const noexcept override;
+    std::shared_ptr<Item> changeAmount(int delta) const override;
+    virtual std::shared_ptr<ShipConsumable> clone() const = 0;
 };
 
 class ShipEquipment : public ShipItem {
 public:
     ShipEquipment(QString name, QString description, uint32_t price = 0);
     virtual void equip(Ship* ship) = 0;
+    std::shared_ptr<Item> changeAmount(int delta) const override;
 };
 
 class ShipCannons : public ShipEquipment {
 public:
-    uint8_t rawDamage;
-    uint8_t probability;
-    uint8_t weight;
+    const uint8_t rawDamage;
+    const uint8_t probability;
+    const uint8_t weight;
     ShipCannons(QString name, QString description, uint8_t rawDamage,
                 uint8_t probability, uint8_t weight, uint32_t price = 0);
     void equip(Ship* ship) override;
@@ -119,9 +129,9 @@ public:
 
 class ShipHull : public ShipEquipment {
 public:
-    uint32_t additionalHealth;
-    uint8_t escapeDecreasement;
-    uint8_t carryingCapacity;
+    const uint32_t additionalHealth;
+    const uint8_t escapeDecreasement;
+    const uint8_t carryingCapacity;
     ShipHull(QString name, QString description, uint32_t additionalHealth,
              uint8_t escapeDecreasement, uint8_t carryingCapacity, uint32_t price = 0);
     void equip(Ship* ship) override;
@@ -130,7 +140,7 @@ public:
 
 class ShipSail : public ShipEquipment {
 public:
-    uint8_t escapeIncreasement;
+    const uint8_t escapeIncreasement;
     ShipSail(QString name, QString description, uint8_t escapeIncreasement,
              uint32_t price = 0);
     void equip(Ship* ship) override;

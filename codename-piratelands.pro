@@ -19,21 +19,28 @@ SOURCES += \
     game.cpp \
     hero.cpp \
     item.cpp \
+    itemmapmodel.cpp \
     main.cpp \
     mainwindow.cpp \
     ship.cpp \
+    shop.cpp \
+    shopwindow.cpp \
     world.cpp
 
 HEADERS += \
     game.h \
     hero.h \
     item.h \
+    itemmapmodel.h \
     mainwindow.h \
     ship.h \
+    shop.h \
+    shopwindow.h \
     world.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    shopwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

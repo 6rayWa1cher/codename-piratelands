@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "game.h"
+#include "shopwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -12,10 +13,13 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr, std::shared_ptr<Game> game = nullptr);
+    MainWindow(QWidget *parent = nullptr, ShopWindow* _shopWindow = nullptr, std::shared_ptr<Game> game = nullptr);
     ~MainWindow();
 
 private:
+    ShopWindow* _shopWindow;
+    InventoryItemModel _worldInventoryModel;
+    CharacteristicsItemModel _characteristicsInventoryModel;
     Ui::MainWindow *ui;
     std::shared_ptr<Game> _game;
 public slots:
@@ -24,5 +28,6 @@ public slots:
     void moveEast();
     void moveWest();
     void moveSouth();
+    void displayShop();
 };
 #endif // MAINWINDOW_H
