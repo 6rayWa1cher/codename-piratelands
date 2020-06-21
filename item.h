@@ -4,6 +4,7 @@
 #include <QString>
 #include <memory>
 #include "hero.h"
+class Game;
 
 enum class ItemType {
     KEY_ITEM = 0,
@@ -18,6 +19,8 @@ enum class ItemType {
 };
 
 const ItemType LAST_ITEM_TYPE = ItemType::SHIP_SAIL;
+
+// ABSTRACT SECTION
 
 class Item : public std::enable_shared_from_this<Item> {
 public:
@@ -34,6 +37,7 @@ class KeyItem : public Item {
 public:
     KeyItem(QString name, QString description, uint32_t price = 0);
     ItemType getType() const noexcept override;
+    virtual void use(std::shared_ptr<Game> game) const = 0;
     std::shared_ptr<Item> changeAmount(int delta) const override;
 };
 
@@ -146,5 +150,7 @@ public:
     void equip(Ship* ship) override;
     ItemType getType() const noexcept override;
 };
+
+// IMPLEMENTATIONS SECTION
 
 #endif // ITEM_H

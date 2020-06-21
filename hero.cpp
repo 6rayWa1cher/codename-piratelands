@@ -36,14 +36,14 @@ Hero::Hero(QString name, std::shared_ptr<World> world)
     : _name(name), _world(world) {
     _money = 0;
     _health = 100;
-    _currentRoom = 0;
+    _currentRoom = 15;
     for (int i = 0; i < int(LAST_ITEM_TYPE); ++i) {
         _inventory[ItemType(i)] = QList<std::shared_ptr<Item>>();
     }
 }
 
 void Hero::move(Direction dir) {
-    _currentRoom = (*_world)[_currentRoom]._neighbourRooms[dir];
+    _currentRoom = (*_world)[_currentRoom]->_neighbourRooms[dir];
     emit hero_moved(_currentRoom);
 }
 
@@ -52,7 +52,7 @@ void Hero::addItem(std::shared_ptr<Item> item) {
     if (!itemGroupInShop.contains(item)) {
         itemGroupInShop.push_back(item);
     } else {
-        auto newItem = item->changeAmount(1);
+        auto newItem = item->changeAmount(item->amount);
         itemGroupInShop.replace(itemGroupInShop.indexOf(item), newItem);
     }
     emit inventory_changed(_inventory);
@@ -65,7 +65,7 @@ void Hero::removeItem(std::shared_ptr<Item> item)
         std::cerr << "Can't remove item which isn't presented" << std::endl;
         return;
     }
-    auto newItem = item->changeAmount(-1);
+    auto newItem = item->changeAmount(-int64_t(item->amount));
     if (newItem) {
         itemGroupInShop.replace(itemGroupInShop.indexOf(item), newItem);
     } else {

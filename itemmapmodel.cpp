@@ -24,7 +24,7 @@ ItemMapModel::ItemMapModel(QObject *parent,
 
 std::shared_ptr<Item> ItemMapModel::getItemFromIndex(const QModelIndex& index) const {
     int i = 0;
-    for (auto itemType : _container.keys()) {
+    for (const auto& itemType : _container.keys()) {
         if (!_toShow.contains(itemType))
             continue;
         const auto& itemGroup = _container[itemType];
@@ -39,7 +39,7 @@ std::shared_ptr<Item> ItemMapModel::getItemFromIndex(const QModelIndex& index) c
 
 int ItemMapModel::rowCount(const QModelIndex &/*parent*/) const {
     int size = 0;
-    for (auto itemType : _container.keys()) {
+    for (const auto& itemType : _container.keys()) {
         if (_toShow.contains(itemType))
             size += _container[itemType].size();
     }

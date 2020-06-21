@@ -1,4 +1,5 @@
 #include "item.h"
+#include "game.h"
 
 Item::Item(QString name, QString description, uint32_t price, uint32_t amount) :
     name(name), description(description), price(price), amount(amount){

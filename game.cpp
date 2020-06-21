@@ -3,7 +3,7 @@
 #include <algorithm>
 
 Game::Game(QString name) {
-    _world = std::make_shared<World>();
+    _world = std::make_shared<World>(nullptr);
     _hero = std::make_shared<Hero>(name, _world);
     _shop = std::make_shared<Shop>(this);
     _shop->addItem(

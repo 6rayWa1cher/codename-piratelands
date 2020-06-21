@@ -19,6 +19,7 @@ SOURCES += \
     game.cpp \
     hero.cpp \
     item.cpp \
+    itemcollectedwindow.cpp \
     itemmapmodel.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     game.h \
     hero.h \
     item.h \
+    itemcollectedwindow.h \
     itemmapmodel.h \
     mainwindow.h \
     ship.h \
@@ -39,6 +41,7 @@ HEADERS += \
     world.h
 
 FORMS += \
+    itemcollectedwindow.ui \
     mainwindow.ui \
     shopwindow.ui
 

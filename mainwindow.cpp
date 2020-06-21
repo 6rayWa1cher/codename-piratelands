@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     , ui(new Ui::MainWindow)
     , _game(game){
     ui->setupUi(this);
-    enterRoom(0);
+    enterRoom(15);
     ui->inventory->setModel(&_worldInventoryModel);
     ui->characteristics_inventorty_view->setModel(&_characteristicsInventoryModel);
     connect(ui->characteristics_inventorty_view, SIGNAL(doubleClicked(const QModelIndex &)), &_characteristicsInventoryModel, SLOT(onTableClicked(const QModelIndex &)));
@@ -30,8 +30,8 @@ MainWindow::~MainWindow() {
 
 void MainWindow::enterRoom(int room) {
     auto _room = (*(*_game)._world)[room];
-    ui->zone_description->setText(_room._name + "\n\n" + _room._description);
-    auto map = _room._neighbourRooms;
+    ui->zone_description->setText(_room->name() + "\n\n" + _room->description());
+    auto map = _room->_neighbourRooms;
     ui->north->setEnabled(map[Direction::North] != -1);
     ui->east->setEnabled(map[Direction::East] != -1);
     ui->west->setEnabled(map[Direction::West] != -1);
