@@ -31,6 +31,7 @@ public:
     Item(QString name, QString description, uint32_t price = 0, uint32_t amount = 1);
     virtual ItemType getType() const noexcept = 0;
     virtual std::shared_ptr<Item> changeAmount(int delta) const = 0;
+    virtual void equip(Hero* hero) = 0;
 };
 
 class KeyItem : public Item {
@@ -59,7 +60,7 @@ public:
 class HeroEquipment : public HeroItem {
 public:
     HeroEquipment(QString name, QString description, uint32_t price = 0);
-    virtual void equip(Hero* hero) = 0;
+    //virtual void equip(Hero* hero) = 0;
     std::shared_ptr<Item> changeAmount(int delta) const override;
 };
 
@@ -101,6 +102,7 @@ public:
 class ShipItem : public Item {
 public:
     ShipItem(QString name, QString description, uint32_t price = 0, uint32_t amount = 1);
+    virtual void equip(Hero* hero) = 0;
 };
 
 class ShipConsumable : public ShipItem {
@@ -116,7 +118,6 @@ public:
 class ShipEquipment : public ShipItem {
 public:
     ShipEquipment(QString name, QString description, uint32_t price = 0);
-    virtual void equip(Ship* ship) = 0;
     std::shared_ptr<Item> changeAmount(int delta) const override;
 };
 
@@ -127,7 +128,7 @@ public:
     const uint8_t weight;
     ShipCannons(QString name, QString description, uint8_t rawDamage,
                 uint8_t probability, uint8_t weight, uint32_t price = 0);
-    void equip(Ship* ship) override;
+    void equip(Hero* hero) override;
     ItemType getType() const noexcept override;
 };
 
@@ -138,7 +139,7 @@ public:
     const uint8_t carryingCapacity;
     ShipHull(QString name, QString description, uint32_t additionalHealth,
              uint8_t escapeDecreasement, uint8_t carryingCapacity, uint32_t price = 0);
-    void equip(Ship* ship) override;
+    void equip(Hero* hero) override;
     ItemType getType() const noexcept override;
 };
 
@@ -147,7 +148,7 @@ public:
     const uint8_t escapeIncreasement;
     ShipSail(QString name, QString description, uint8_t escapeIncreasement,
              uint32_t price = 0);
-    void equip(Ship* ship) override;
+    void equip(Hero* hero) override;
     ItemType getType() const noexcept override;
 };
 

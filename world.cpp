@@ -18,18 +18,15 @@ void Room::successfulEncount() {
 
 }
 
-QString Room::name() const
-{
+QString Room::name() const {
     return _name;
 }
 
-QString Room::description() const
-{
+QString Room::description() const {
     return _description;
 }
 
-bool Room::isShopAvailable()
-{
+bool Room::isShopAvailable() {
     return false;
 }
 
@@ -145,8 +142,7 @@ void World::init() {
     _rooms.append(std::make_shared<Sea>(this, 17, 18, 5, 22)); // F4
 }
 
-void World::sendEncounter(EncounterType type, std::shared_ptr<Hero> enemy)
-{
+void World::sendEncounter(EncounterType type, std::shared_ptr<Hero> enemy) {
     emit encounter(type, enemy);
 }
 

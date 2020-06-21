@@ -168,8 +168,11 @@ ShipCannons::ShipCannons(QString name, QString description, uint8_t rawDamage,
 
 }
 
-void ShipCannons::equip(Ship* ship) {
-    //TODO: EQUIP
+void ShipCannons::equip(Hero* hero) {
+    auto cannons = hero->cannons();
+    if(cannons) hero->addItem(cannons);
+    hero->removeItem(std::make_shared<ShipCannons>(*this));
+    hero->equipCannons(std::make_shared<ShipCannons>(*this));
 }
 
 ItemType ShipCannons::getType() const noexcept {
@@ -184,8 +187,12 @@ ShipHull::ShipHull(QString name, QString description, uint32_t additionalHealth,
 
 }
 
-void ShipHull::equip(Ship* ship) {
-    //TODO: EQUIP
+void ShipHull::equip(Hero* hero) {
+    auto hull = hero->hull();
+    if(hull) hero->addItem(hull);
+    hero->removeItem(std::make_shared<ShipHull>(*this));
+    hero->equipHull(std::make_shared<ShipHull>(*this));
+
 }
 
 ItemType ShipHull::getType() const noexcept {
@@ -198,8 +205,11 @@ ShipSail::ShipSail(QString name, QString description, uint8_t escapeIncreasement
 
 }
 
-void ShipSail::equip(Ship* ship) {
-    //TODO: EQUIP
+void ShipSail::equip(Hero* hero) {
+    auto sail = hero->sail();
+    if(sail) hero->addItem(sail);
+    hero->removeItem(std::make_shared<ShipSail>(*this));
+    hero->equipSail(std::make_shared<ShipSail>(*this));
 }
 
 ItemType ShipSail::getType() const noexcept {

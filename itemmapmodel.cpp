@@ -144,6 +144,6 @@ CharacteristicsItemModel::CharacteristicsItemModel(QObject *parent,
 void CharacteristicsItemModel::onTableClicked(const QModelIndex& index) {
     if (index.isValid()) {
         std::shared_ptr<Item> item = getItemFromIndex(index);
-        // TODO: SOME LOGIC
+        item->equip(&*_hero);
     }
 }

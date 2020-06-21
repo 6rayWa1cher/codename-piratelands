@@ -29,5 +29,8 @@ public slots:
     void moveWest();
     void moveSouth();
     void displayShop();
+    void replaceCannons(std::shared_ptr<ShipCannons> cannons);
+    void replaceHull(std::shared_ptr<ShipHull> hull);
+    void replaceSail(std::shared_ptr<ShipSail> sail);
 };
 #endif // MAINWINDOW_H

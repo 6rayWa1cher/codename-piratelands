@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     connect(ui->west, SIGNAL(clicked()), this, SLOT(moveWest()));
     connect(ui->south, SIGNAL(clicked()), this, SLOT(moveSouth()));
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(displayShop()));
+    connect(&(*game->_hero), SIGNAL(cannons_changed(std::shared_ptr<ShipCannons>)), this, SLOT(replaceCannons(std::shared_ptr<ShipCannons>)));
+    connect(&(*game->_hero), SIGNAL(hull_changed(std::shared_ptr<ShipHull>)), this, SLOT(replaceHull(std::shared_ptr<ShipHull>)));
+    connect(&(*game->_hero), SIGNAL(sail_changed(std::shared_ptr<ShipSail>)), this, SLOT(replaceSail(std::shared_ptr<ShipSail>)));
 
 }
 
@@ -56,4 +59,19 @@ void MainWindow::moveSouth() {
 
 void MainWindow::displayShop() {
     _shopWindow->show();
+}
+
+void MainWindow::replaceCannons(std::shared_ptr<ShipCannons> cannons) {
+    ui->equipped_melee_weapon_name->setText(cannons->name);
+    ui->equipped_melee_weapon_name->setToolTip(cannons->description);
+}
+
+void MainWindow::replaceHull(std::shared_ptr<ShipHull> hull) {
+    ui->equipped_range_weapon_name->setText(hull->name);
+    ui->equipped_range_weapon_name->setToolTip(hull->description);
+}
+
+void MainWindow::replaceSail(std::shared_ptr<ShipSail> sail) {
+    ui->equipped_armor_name->setText(sail->name);
+    ui->equipped_armor_name->setToolTip(sail->description);
 }
