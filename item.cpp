@@ -139,3 +139,22 @@ void MapPiece::use(std::shared_ptr<Game> /*game*/) const
 
 
 
+
+ShipBoardingTeam::ShipBoardingTeam(QString name, QString description, uint8_t boardingPower, uint32_t price) :
+    ShipEquipment(name, description, price), boardingPower(boardingPower)
+{
+
+}
+
+void ShipBoardingTeam::equip(Hero *hero)
+{
+    auto team = hero->team();
+    if(team) hero->addItem(team);
+    hero->removeItem(std::make_shared<ShipBoardingTeam>(*this));
+    hero->equipTeam(std::make_shared<ShipBoardingTeam>(*this));
+}
+
+ItemType ShipBoardingTeam::getType() const noexcept
+{
+    return ItemType::SHIP_BOARDING_TEAM;
+}

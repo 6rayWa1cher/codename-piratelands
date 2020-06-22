@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     connect(ui->west, SIGNAL(clicked()), this, SLOT(moveWest()));
     connect(ui->south, SIGNAL(clicked()), this, SLOT(moveSouth()));
     connect(ui->shop_button, SIGNAL(clicked()), this, SLOT(displayShop()));
+    connect(&(*game->_hero), SIGNAL(team_changed(std::shared_ptr<ShipBoardingTeam>)), this, SLOT(replaceTeam(std::shared_ptr<ShipBoardingTeam>)));
     connect(&(*game->_hero), SIGNAL(cannons_changed(std::shared_ptr<ShipCannons>)), this, SLOT(replaceCannons(std::shared_ptr<ShipCannons>)));
     connect(&(*game->_hero), SIGNAL(hull_changed(std::shared_ptr<ShipHull>)), this, SLOT(replaceHull(std::shared_ptr<ShipHull>)));
     connect(&(*game->_hero), SIGNAL(sail_changed(std::shared_ptr<ShipSail>)), this, SLOT(replaceSail(std::shared_ptr<ShipSail>)));
@@ -72,6 +73,12 @@ void MainWindow::moveSouth() {
 
 void MainWindow::displayShop() {
     _shopWindow->show();
+}
+
+void MainWindow::replaceTeam(std::shared_ptr<ShipBoardingTeam> team)
+{
+    ui->team_name->setText(team->name);
+    ui->team_name->setToolTip(team->description);
 }
 
 void MainWindow::replaceCannons(std::shared_ptr<ShipCannons> cannons) {

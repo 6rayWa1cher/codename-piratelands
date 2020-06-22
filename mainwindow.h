@@ -31,6 +31,7 @@ public slots:
     void moveWest();
     void moveSouth();
     void displayShop();
+    void replaceTeam(std::shared_ptr<ShipBoardingTeam> team);
     void replaceCannons(std::shared_ptr<ShipCannons> cannons);
     void replaceHull(std::shared_ptr<ShipHull> hull);
     void replaceSail(std::shared_ptr<ShipSail> sail);

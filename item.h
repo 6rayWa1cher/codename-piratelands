@@ -10,6 +10,7 @@ class Game;
 enum class ItemType {
     KEY_ITEM = 0,
     SHIP_CONSUMABLE,
+    SHIP_BOARDING_TEAM,
     SHIP_CANNONS,
     SHIP_HULL,
     SHIP_SAIL
@@ -58,6 +59,15 @@ public:
     ShipEquipment(QString name, QString description, uint32_t price = 0);
     std::shared_ptr<Item> changeAmount(int delta) const override;
     virtual void equip(Hero* hero) = 0;
+};
+
+class ShipBoardingTeam : public ShipEquipment {
+public:
+    const uint8_t boardingPower;
+    ShipBoardingTeam(QString name, QString description, uint8_t boardingPower,
+                     uint32_t price = 0);
+    void equip(Hero* hero) override;
+    ItemType getType() const noexcept override;
 };
 
 class ShipCannons : public ShipEquipment {

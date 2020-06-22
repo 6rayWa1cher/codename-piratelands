@@ -2,30 +2,30 @@
 #include "item.h"
 #include <iostream>
 
-QString Hero::name() const
+QString Enemy::name() const
 {
     return _name;
 }
 
-uint16_t Hero::health() const
+uint16_t Enemy::health() const
 {
     return _health;
 }
 
-uint32_t Hero::money() const
+uint32_t Enemy::money() const
 {
     return _money;
 }
 
-std::shared_ptr<ShipCannons> Hero::cannons() {
+std::shared_ptr<ShipCannons> Enemy::cannons() {
     return _cannons;
 }
 
-std::shared_ptr<ShipHull> Hero::hull() {
+std::shared_ptr<ShipHull> Enemy::hull() {
     return _hull;
 }
 
-std::shared_ptr<ShipSail> Hero::sail() {
+std::shared_ptr<ShipSail> Enemy::sail() {
     return _sail;
 }
 
@@ -39,10 +39,24 @@ uint16_t Hero::currentRoom() const
     return _currentRoom;
 }
 
-Hero::Hero(QString name, std::shared_ptr<World> world)
-    : _name(name), _world(world) {
-    _money = 5;
-    _health = 100;
+std::shared_ptr<ShipBoardingTeam> Enemy::team()
+{
+    return _team;
+}
+
+Enemy::Enemy(QString name, std::shared_ptr<World> world, uint16_t health, uint32_t money, std::shared_ptr<ShipBoardingTeam> team,
+             std::shared_ptr<ShipCannons> cannons, std::shared_ptr<ShipHull> hull,
+             std::shared_ptr<ShipSail> sail)
+    : _name(name), _world(world), _team(team), _cannons(cannons), _hull(hull), _sail(sail), _health(health),
+      _money(money){
+
+}
+
+
+
+Hero::Hero(QString name, std::shared_ptr<World> world) :
+    Enemy(name, world, 150, 5)
+{
     _currentRoom = 15;
     for (int i = 0; i < int(LAST_ITEM_TYPE); ++i) {
         _inventory[ItemType(i)] = QList<std::shared_ptr<Item>>();
@@ -97,6 +111,12 @@ bool Hero::changeMoney(int delta) {
     return true;
 }
 
+void Hero::equipTeam(std::shared_ptr<ShipBoardingTeam> team)
+{
+    _team = team;
+    emit team_changed(team);
+}
+
 void Hero::equipCannons(std::shared_ptr<ShipCannons> cannons) {
     _cannons = cannons;
     emit cannons_changed(cannons);
@@ -110,4 +130,9 @@ void Hero::equipHull(std::shared_ptr<ShipHull> hull) {
 void Hero::equipSail(std::shared_ptr<ShipSail> sail) {
     _sail = sail;
     emit sail_changed(sail);
+}
+
+void Enemy::setHealth(const uint16_t &health)
+{
+    _health = health;
 }

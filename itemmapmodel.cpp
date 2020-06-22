@@ -129,6 +129,7 @@ CharacteristicsItemModel::CharacteristicsItemModel(QObject *parent,
                                                    std::shared_ptr<Game> game) :
     InventoryItemModel(parent, game, {
                        ItemType::SHIP_CONSUMABLE,
+                       ItemType::SHIP_BOARDING_TEAM,\
                        ItemType::SHIP_CANNONS,
                        ItemType::SHIP_HULL,
                        ItemType::SHIP_SAIL}, false),
@@ -144,6 +145,7 @@ void CharacteristicsItemModel::onTableClicked(const QModelIndex& index) {
         case ItemType::SHIP_HULL:
         case ItemType::SHIP_SAIL:
         case ItemType::SHIP_CANNONS:
+        case ItemType::SHIP_BOARDING_TEAM:
             std::dynamic_pointer_cast<ShipEquipment>(item)->equip(&*_hero);
             break;
         default:
