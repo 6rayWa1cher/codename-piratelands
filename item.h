@@ -63,8 +63,8 @@ public:
 
 class ShipBoardingTeam : public ShipEquipment {
 public:
-    const uint8_t boardingPower;
-    ShipBoardingTeam(QString name, QString description, uint8_t boardingPower,
+    const uint8_t baseBoardingPower;
+    ShipBoardingTeam(QString name, QString description, uint8_t baseBoardingPower,
                      uint32_t price = 0);
     void equip(Hero* hero) override;
     ItemType getType() const noexcept override;
@@ -72,30 +72,36 @@ public:
 
 class ShipCannons : public ShipEquipment {
 public:
-    const uint8_t rawDamage;
-    const uint8_t probability;
+    const uint8_t baseAttack;
+    const uint8_t baseAccuracy;
     const uint8_t weight;
-    ShipCannons(QString name, QString description, uint8_t rawDamage,
-                uint8_t probability, uint8_t weight, uint32_t price = 0);
+    ShipCannons(QString name, QString description, uint8_t baseAttack,
+                uint8_t baseAccuracy, uint8_t weight, uint32_t price = 0);
     void equip(Hero* hero) override;
     ItemType getType() const noexcept override;
 };
 
 class ShipHull : public ShipEquipment {
 public:
-    const uint32_t additionalHealth;
+    const uint8_t baseHealth;
+    const uint8_t baseArmor;
+    const uint8_t evasionDecreasement;
     const uint8_t escapeDecreasement;
-    const uint8_t carryingCapacity;
-    ShipHull(QString name, QString description, uint32_t additionalHealth,
-             uint8_t escapeDecreasement, uint8_t carryingCapacity, uint32_t price = 0);
+    const uint8_t baseCarryingCapacity;
+    const uint8_t boardingPowerDecreasement;
+    ShipHull(QString name, QString description, uint32_t baseHealth, uint8_t baseArmor,
+             uint8_t evasionDecreasement, uint8_t escapeDecreasement,
+             uint8_t baseCarryingCapacity, uint8_t boardingPowerDecreasement,
+             uint32_t price = 0);
     void equip(Hero* hero) override;
     ItemType getType() const noexcept override;
 };
 
 class ShipSail : public ShipEquipment {
 public:
-    const uint8_t escapeIncreasement;
-    ShipSail(QString name, QString description, uint8_t escapeIncreasement,
+    const uint8_t baseEvasion;
+    const uint8_t baseEscape;
+    ShipSail(QString name, QString description, uint8_t baseEvasion, uint8_t baseEscape,
              uint32_t price = 0);
     void equip(Hero* hero) override;
     ItemType getType() const noexcept override;

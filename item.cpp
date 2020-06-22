@@ -68,10 +68,10 @@ std::shared_ptr<Item> ShipEquipment::changeAmount(int delta) const
     }
 }
 
-ShipCannons::ShipCannons(QString name, QString description, uint8_t rawDamage,
-                         uint8_t probability, uint8_t weight, uint32_t price) :
-    ShipEquipment(name, description, price), rawDamage(rawDamage),
-    probability(probability), weight(weight) {
+ShipCannons::ShipCannons(QString name, QString description, uint8_t baseAttack,
+                         uint8_t baseAccuracy, uint8_t weight, uint32_t price) :
+    ShipEquipment(name, description, price), baseAttack(baseAttack),
+    baseAccuracy(baseAccuracy), weight(weight) {
 
 }
 
@@ -87,10 +87,14 @@ ItemType ShipCannons::getType() const noexcept {
 }
 
 
-ShipHull::ShipHull(QString name, QString description, uint32_t additionalHealth,
-                   uint8_t escapeDecreasement, uint8_t carryingCapacity, uint32_t price) :
-    ShipEquipment(name, description, price), additionalHealth(additionalHealth),
-    escapeDecreasement(escapeDecreasement), carryingCapacity(carryingCapacity) {
+ShipHull::ShipHull(QString name, QString description, uint32_t baseHealth, uint8_t baseArmor,
+                   uint8_t evasionDecreasement, uint8_t escapeDecreasement,
+                   uint8_t baseCarryingCapacity, uint8_t boardingPowerDecreasement,
+                   uint32_t price) :
+    ShipEquipment(name, description, price), baseHealth(baseHealth),
+    baseArmor(baseArmor), evasionDecreasement(evasionDecreasement),
+    escapeDecreasement(escapeDecreasement), baseCarryingCapacity(baseCarryingCapacity),
+    boardingPowerDecreasement(boardingPowerDecreasement){
 
 }
 
@@ -106,9 +110,9 @@ ItemType ShipHull::getType() const noexcept {
     return ItemType::SHIP_HULL;
 }
 
-ShipSail::ShipSail(QString name, QString description, uint8_t escapeIncreasement,
+ShipSail::ShipSail(QString name, QString description, uint8_t baseEvasion, uint8_t baseEscape,
                    uint32_t price) : ShipEquipment(name, description, price),
-    escapeIncreasement(escapeIncreasement) {
+    baseEvasion(baseEvasion), baseEscape(baseEscape) {
 
 }
 
@@ -140,8 +144,9 @@ void MapPiece::use(std::shared_ptr<Game> /*game*/) const
 
 
 
-ShipBoardingTeam::ShipBoardingTeam(QString name, QString description, uint8_t boardingPower, uint32_t price) :
-    ShipEquipment(name, description, price), boardingPower(boardingPower)
+ShipBoardingTeam::ShipBoardingTeam(QString name, QString description, uint8_t baseBoardingPower,
+                                   uint32_t price) :
+    ShipEquipment(name, description, price), baseBoardingPower(baseBoardingPower)
 {
 
 }
