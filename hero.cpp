@@ -41,7 +41,7 @@ uint16_t Hero::currentRoom() const
 
 Hero::Hero(QString name, std::shared_ptr<World> world)
     : _name(name), _world(world) {
-    _money = 0;
+    _money = 5;
     _health = 100;
     _currentRoom = 15;
     for (int i = 0; i < int(LAST_ITEM_TYPE); ++i) {

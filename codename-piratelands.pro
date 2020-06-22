@@ -23,7 +23,6 @@ SOURCES += \
     itemmapmodel.cpp \
     main.cpp \
     mainwindow.cpp \
-    ship.cpp \
     shop.cpp \
     shopwindow.cpp \
     world.cpp
@@ -35,7 +34,6 @@ HEADERS += \
     itemcollectedwindow.h \
     itemmapmodel.h \
     mainwindow.h \
-    ship.h \
     shop.h \
     shopwindow.h \
     world.h

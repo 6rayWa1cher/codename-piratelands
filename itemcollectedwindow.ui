@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>itemcollectedwindow</class>
- <widget class="QDialog" name="itemcollectedwindow">
+ <class>ItemCollectedWindow</class>
+ <widget class="QDialog" name="ItemCollectedWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -64,7 +64,7 @@
   <connection>
    <sender>pushButton</sender>
    <signal>clicked()</signal>
-   <receiver>itemcollectedwindow</receiver>
+   <receiver>ItemCollectedWindow</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -27,14 +27,14 @@ class Room {
 protected:
     QString _name;
     QString _description;
-    World* _world;
 public:
     QMap<Direction, int> _neighbourRooms;
+    World* _world;
 
     Room(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w);
 
     virtual void heroStepped(std::shared_ptr<Hero> hero);
-    virtual void successfulEncount();
+    virtual void successfulEncount(std::shared_ptr<Hero> hero);
     QString name() const;
     QString description() const;
     virtual bool isShopAvailable();
@@ -48,16 +48,18 @@ public:
 class Island : public Room {
 private:
     std::function<void(Island (*), std::shared_ptr<Hero>)> _heroStepped;
-    std::function<void(Island (*))> _successfulEncount;
+    std::function<void(Island (*), std::shared_ptr<Hero>)> _successfulEncount;
+    bool _firstTimeStep = true;
 public:
     bool isCleared;
     Island(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w);
     Island(World* world, QString roomName, QString roomDescr,
            int n, int e, int s, int w, std::function<void(Island (*), std::shared_ptr<Hero>)> heroStepped,
-           std::function<void(Island (*))> successfulEncount);
+           std::function<void(Island (*), std::shared_ptr<Hero>)> successfulEncount);
     virtual void heroStepped(std::shared_ptr<Hero> hero) override;
-    virtual void successfulEncount() override;
+    virtual void successfulEncount(std::shared_ptr<Hero> hero) override;
     virtual bool isShopAvailable() override;
+    bool firstTimeStep() const;
 };
 
 class E1Island : public Room {
@@ -67,7 +69,7 @@ private:
 public:
     E1Island(World* world, int n, int e, int s, int w);
     virtual void heroStepped(std::shared_ptr<Hero> hero) override;
-    virtual void successfulEncount() override;
+    virtual void successfulEncount(std::shared_ptr<Hero> hero) override;
 private:
     void updateInfo();
 };
@@ -81,13 +83,15 @@ public:
     std::shared_ptr<Room> operator [](int index) const;
     void init();
     void sendEncounter(EncounterType type, std::shared_ptr<Hero> enemy);
+    void sendWorldChanged();
+    void grantItem(std::shared_ptr<Hero> hero, std::shared_ptr<Item> item);
+    void heroMoved(std::shared_ptr<Hero> hero, int index);
 signals:
     void worldChanged();
     void encounter(EncounterType type, std::shared_ptr<Hero> enemy);
+    void loudAddItem(std::shared_ptr<Item> item);
 public slots:
-    void heroInventoryChanged(QMap<ItemType, QList<std::shared_ptr<Item>>> map);
-    void heroMoved(std::shared_ptr<Hero> hero, int index);
-    void encounterSuccessful(int index);
+    void encounterSuccessful(int index, std::shared_ptr<Hero> hero);
 };
 
 #endif // WORLD_H

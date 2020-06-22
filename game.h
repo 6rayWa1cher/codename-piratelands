@@ -11,6 +11,8 @@ public:
     std::shared_ptr<World> _world;
     std::shared_ptr<Shop> _shop;
     Game(QString name);
+public slots:
+    void heroMoved(int index);
 };
 
 #endif // GAME_H

@@ -128,10 +128,6 @@ void SellItemModel::onTableClicked(const QModelIndex& index) {
 CharacteristicsItemModel::CharacteristicsItemModel(QObject *parent,
                                                    std::shared_ptr<Game> game) :
     InventoryItemModel(parent, game, {
-                       ItemType::HERO_CONSUMABLE,
-                       ItemType::HERO_MELEE_WEAPON,
-                       ItemType::HERO_RANGE_WEAPON,
-                       ItemType::HERO_ARMOR,
                        ItemType::SHIP_CONSUMABLE,
                        ItemType::SHIP_CANNONS,
                        ItemType::SHIP_HULL,
@@ -144,6 +140,15 @@ CharacteristicsItemModel::CharacteristicsItemModel(QObject *parent,
 void CharacteristicsItemModel::onTableClicked(const QModelIndex& index) {
     if (index.isValid()) {
         std::shared_ptr<Item> item = getItemFromIndex(index);
-        item->equip(&*_hero);
+        switch (item->getType()) {
+        case ItemType::SHIP_HULL:
+        case ItemType::SHIP_SAIL:
+        case ItemType::SHIP_CANNONS:
+            std::dynamic_pointer_cast<ShipEquipment>(item)->equip(&*_hero);
+            break;
+        default:
+            break;
+        }
+
     }
 }

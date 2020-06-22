@@ -23,6 +23,8 @@ private:
     Ui::MainWindow *ui;
     std::shared_ptr<Game> _game;
 public slots:
+    void rerenderCurrentRoom();
+    void presentNewItem(std::shared_ptr<Item> item);
     void enterRoom(int room);
     void moveNorth();
     void moveEast();

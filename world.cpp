@@ -14,7 +14,7 @@ void Room::heroStepped(std::shared_ptr<Hero> /*hero*/) {
 
 }
 
-void Room::successfulEncount() {
+void Room::successfulEncount(std::shared_ptr<Hero> /*hero*/) {
 
 }
 
@@ -35,14 +35,20 @@ Sea::Sea(World* world, int n, int e, int s, int w) :
 
 }
 
+bool Island::firstTimeStep() const
+{
+    return _firstTimeStep;
+}
+
 Island::Island(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w) :
-    Room(world, roomName, roomDescr, n, e, s, w) {
+    Room(world, roomName, roomDescr, n, e, s, w), _heroStepped([](Island*, std::shared_ptr<Hero>){}),
+_successfulEncount([](Island*, std::shared_ptr<Hero>){}) {
 
 }
 
 Island::Island(World *world, QString roomName, QString roomDescr, int n, int e, int s, int w,
                std::function<void (Island *, std::shared_ptr<Hero>)> heroStepped,
-               std::function<void (Island *)> successfulEncount) :
+               std::function<void (Island *, std::shared_ptr<Hero>)> successfulEncount) :
     Room(world, roomName, roomDescr, n, e, s, w), _heroStepped(heroStepped), _successfulEncount(successfulEncount)
 {
 
@@ -50,10 +56,11 @@ Island::Island(World *world, QString roomName, QString roomDescr, int n, int e, 
 
 void Island::heroStepped(std::shared_ptr<Hero> hero) {
     _heroStepped(this, hero);
+    _firstTimeStep = false;
 }
 
-void Island::successfulEncount() {
-    _successfulEncount(this);
+void Island::successfulEncount(std::shared_ptr<Hero> hero) {
+    _successfulEncount(this, hero);
 }
 
 bool Island::isShopAvailable() {
@@ -65,7 +72,12 @@ E1Island::E1Island(World* world, int n, int e, int s, int w) : Room(world, "", "
 }
 
 void E1Island::heroStepped(std::shared_ptr<Hero> hero) {
-    if (hero->inventory()[ItemType::KEY_ITEM].contains(nullptr)) {
+    bool p1 = false, p2 = false;
+    for (const auto& i : hero->inventory()[ItemType::KEY_ITEM]) {
+        p1 |= i->name == "Карта часть#1";
+        p2 |= i->name == "Карта часть#2";
+    }
+    if (p1 && p2) {
         _isMapCollected = true;
         updateInfo();
         if (_isOver) {
@@ -80,7 +92,7 @@ void E1Island::heroStepped(std::shared_ptr<Hero> hero) {
     }
 }
 
-void E1Island::successfulEncount() {
+void E1Island::successfulEncount(std::shared_ptr<Hero> /*hero*/) {
     _isOver = true;
     _neighbourRooms.clear();
     updateInfo();
@@ -99,6 +111,7 @@ void E1Island::updateInfo() {
     } else {
         _description = "Вы на корабле где-то посреди моря. Повсюду туман.";
     }
+    _world->sendWorldChanged();
 }
 
 World::World(QObject* parent) : QObject(parent) {
@@ -110,9 +123,6 @@ std::shared_ptr<Room> World::operator [](int index) const {
 }
 
 void World::init() {
-// _rooms.append(Room("Крыльцо", "Вы стоите на крыльце. Перед Вами находится совершенно загадочная дверь.", 1, -1, -1, -1 ) );
-// _rooms.append(Room("Гостиная", "Вы попали в гостиную. В камине сидит страшный жирный паук.", -1, -1, 0, 2));
-// _rooms.append(Room("Кабинет", "Вы стоите в кабинете. Книжный шкаф полон старинных книг.", -1, 1, -1, -1));
     _rooms.append(std::make_shared<Sea>(this, 18, 1, 6, 5)); // A1
     _rooms.append(std::make_shared<Sea>(this, 19, 2, 7, 0)); // B1
     _rooms.append(std::make_shared<Sea>(this, 20, 3, 8, 1)); // C1
@@ -120,7 +130,14 @@ void World::init() {
     _rooms.append(std::make_shared<E1Island>(this, 22, 5, 10, 3)); // E1
     _rooms.append(std::make_shared<Sea>(this, 23, 0, 11, 4)); // F1
     _rooms.append(std::make_shared<Sea>(this, 0, 7, 12, 11)); // A2
-    _rooms.append(std::make_shared<Island>(this, "Остров Куба, Испания", "Лучший ром на всем архипелаге!", 1, 8, 13, 6)); // B2
+    _rooms.append(std::make_shared<Island>(this, "Остров Куба, Испания", "Лучший ром на всем архипелаге!", 1, 8, 13, 6,
+                                           [](Island* island, std::shared_ptr<Hero> hero) {
+                      if (island->firstTimeStep()) {
+                          island->_world->grantItem(hero, std::make_shared<MapPiece>(1));
+                      }
+                  },
+                  [](Island*, std::shared_ptr<Hero>) {}
+    )); // B2
     _rooms.append(std::make_shared<Sea>(this, 2, 9, 14, 7)); // C2
     _rooms.append(std::make_shared<Sea>(this, 3, 10, 15, 8)); // D2
     _rooms.append(std::make_shared<Sea>(this, 4, 11, 16, 9)); // E2
@@ -129,12 +146,20 @@ void World::init() {
     _rooms.append(std::make_shared<Sea>(this, 7, 14, 19, 12)); // B3
     _rooms.append(std::make_shared<Sea>(this, 8, 15, 20, 13)); // C3
     _rooms.append(std::make_shared<Island>(this, "Остров Невис, Англия",
-                         "Здесь началось ваше приключение в поисках легендарного клада Чёрной бороды...",
-                         9, 16, 21, 14)); // D3
+                                           "Здесь началось ваше приключение в поисках легендарного клада Чёрной бороды...",
+                                           9, 16, 21, 14)); // D3
     _rooms.append(std::make_shared<Sea>(this, 10, 17, 22, 15)); // E3
     _rooms.append(std::make_shared<Sea>(this, 11, 12, 23, 16)); // F3
-    _rooms.append(std::make_shared<Island>(this, "Остров Ямайка, Англия", "Один из мощнейших фортов Карибского моря",
-                         12, 19, 0, 23)); // A4
+    _rooms.append(std::make_shared<Island>(
+                      this, "Остров Ямайка, Англия", "Один из мощнейших фортов Карибского моря",
+                      12, 19, 0, 23,
+                      [](Island* island, std::shared_ptr<Hero> hero) {
+                        if (island->firstTimeStep()) {
+                            island->_world->grantItem(hero, std::make_shared<MapPiece>(2));
+                        }
+                      },
+                  [](Island*, std::shared_ptr<Hero>) {}
+    )); // A4
     _rooms.append(std::make_shared<Sea>(this, 13, 20, 1, 18)); // B4
     _rooms.append(std::make_shared<Sea>(this, 14, 21, 2, 19)); // C4
     _rooms.append(std::make_shared<Sea>(this, 15, 22, 3, 20)); // D4
@@ -146,14 +171,20 @@ void World::sendEncounter(EncounterType type, std::shared_ptr<Hero> enemy) {
     emit encounter(type, enemy);
 }
 
-void World::heroInventoryChanged(QMap<ItemType, QList<std::shared_ptr<Item>>> map) {
+void World::sendWorldChanged() {
+    emit worldChanged();
+}
 
+void World::grantItem(std::shared_ptr<Hero> hero, std::shared_ptr<Item> item)
+{
+    hero->addItem(item);
+    emit loudAddItem(item);
 }
 
 void World::heroMoved(std::shared_ptr<Hero> hero, int index) {
     _rooms[index]->heroStepped(hero);
 }
 
-void World::encounterSuccessful(int index) {
-
+void World::encounterSuccessful(int index, std::shared_ptr<Hero> hero) {
+    _rooms[index]->successfulEncount(hero);
 }

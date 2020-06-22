@@ -6,6 +6,7 @@ Game::Game(QString name) {
     _world = std::make_shared<World>(nullptr);
     _hero = std::make_shared<Hero>(name, _world);
     _shop = std::make_shared<Shop>(this);
+    QObject::connect(&*_hero, SIGNAL(hero_moved(int)), this, SLOT(heroMoved(int)));
     _shop->addItem(
                 std::make_shared<ShipCannons>("C1", "Basic cannons", 18, 25, 1, 0)
                 );
@@ -27,4 +28,9 @@ Game::Game(QString name) {
     _hero->addItem(
                 std::make_shared<ShipHull>("asdzxfgcgvjhi", "Basic3 hull", 303, 0, 1, 0)
                 );
+}
+
+void Game::heroMoved(int index)
+{
+    _world->heroMoved(_hero, index);
 }

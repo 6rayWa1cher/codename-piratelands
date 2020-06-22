@@ -1,14 +1,15 @@
 #include "itemcollectedwindow.h"
 #include "ui_itemcollectedwindow.h"
 
-itemcollectedwindow::itemcollectedwindow(QWidget *parent) :
+ItemCollectedWindow::ItemCollectedWindow(QWidget *parent, std::shared_ptr<Item> item) :
     QDialog(parent),
-    ui(new Ui::itemcollectedwindow)
+    ui(new Ui::ItemCollectedWindow)
 {
     ui->setupUi(this);
+    ui->item_name->setText(item->name);
 }
 
-itemcollectedwindow::~itemcollectedwindow()
+ItemCollectedWindow::~ItemCollectedWindow()
 {
     delete ui;
 }

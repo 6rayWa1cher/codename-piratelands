@@ -23,6 +23,8 @@ private:
     ShopItemModel _shopItemModel;
     SellItemModel _sellItemModel;
     Ui::ShopWindow *ui;
+public slots:
+    void moneyChanged(int money);
 };
 
 #endif // SHOPWINDOW_H

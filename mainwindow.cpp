@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "item.h"
+#include "itemcollectedwindow.h"
 
 
 MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<Game> game)
@@ -20,20 +21,32 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     connect(ui->east, SIGNAL(clicked()), this, SLOT(moveEast()));
     connect(ui->west, SIGNAL(clicked()), this, SLOT(moveWest()));
     connect(ui->south, SIGNAL(clicked()), this, SLOT(moveSouth()));
-    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(displayShop()));
+    connect(ui->shop_button, SIGNAL(clicked()), this, SLOT(displayShop()));
     connect(&(*game->_hero), SIGNAL(cannons_changed(std::shared_ptr<ShipCannons>)), this, SLOT(replaceCannons(std::shared_ptr<ShipCannons>)));
     connect(&(*game->_hero), SIGNAL(hull_changed(std::shared_ptr<ShipHull>)), this, SLOT(replaceHull(std::shared_ptr<ShipHull>)));
     connect(&(*game->_hero), SIGNAL(sail_changed(std::shared_ptr<ShipSail>)), this, SLOT(replaceSail(std::shared_ptr<ShipSail>)));
-
+    connect(&(*game->_world), SIGNAL(worldChanged()), this, SLOT(rerenderCurrentRoom()));
 }
 
 MainWindow::~MainWindow() {
     delete ui;
 }
 
+void MainWindow::rerenderCurrentRoom()
+{
+    enterRoom(_game->_hero->currentRoom());
+}
+
+void MainWindow::presentNewItem(std::shared_ptr<Item> item)
+{
+    ItemCollectedWindow w(this, item);
+    w.show();
+}
+
 void MainWindow::enterRoom(int room) {
     auto _room = (*(*_game)._world)[room];
     ui->zone_description->setText(_room->name() + "\n\n" + _room->description());
+    ui->shop_button->setEnabled(_room->isShopAvailable());
     auto map = _room->_neighbourRooms;
     ui->north->setEnabled(map[Direction::North] != -1);
     ui->east->setEnabled(map[Direction::East] != -1);

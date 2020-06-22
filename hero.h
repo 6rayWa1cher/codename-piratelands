@@ -2,7 +2,6 @@
 #define HERO_H
 #include <QObject>
 #include <memory>
-#include "ship.h"
 #include "world.h"
 
 class Item;

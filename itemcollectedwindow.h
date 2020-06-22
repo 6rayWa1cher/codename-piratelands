@@ -2,21 +2,22 @@
 #define ITEMCOLLECTEDWINDOW_H
 
 #include <QDialog>
+#include "item.h"
 
 namespace Ui {
-class itemcollectedwindow;
+class ItemCollectedWindow;
 }
 
-class itemcollectedwindow : public QDialog
+class ItemCollectedWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit itemcollectedwindow(QWidget *parent = nullptr);
-    ~itemcollectedwindow();
+    ItemCollectedWindow(QWidget *parent = nullptr, std::shared_ptr<Item> item = nullptr);
+    ~ItemCollectedWindow();
 
 private:
-    Ui::itemcollectedwindow *ui;
+    Ui::ItemCollectedWindow *ui;
 };
 
 #endif // ITEMCOLLECTEDWINDOW_H

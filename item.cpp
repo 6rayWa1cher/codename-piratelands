@@ -26,99 +26,6 @@ std::shared_ptr<Item> KeyItem::changeAmount(int delta) const
     }
 }
 
-HeroItem::HeroItem(QString name, QString description, uint32_t price,
-                   uint32_t amount) :
-    Item(name, description, price, amount){
-
-}
-
-HeroConsumable::HeroConsumable(QString name, QString description, uint32_t price,
-                               uint32_t amount) :
-    HeroItem(name, description, price, amount) {
-
-}
-
-ItemType HeroConsumable::getType() const noexcept {
-    return ItemType::HERO_CONSUMABLE;
-}
-
-std::shared_ptr<Item> HeroConsumable::changeAmount(int delta) const
-{
-    if (delta < 0 && static_cast<uint32_t>(-delta) > amount) {
-        return nullptr;
-    }
-    std::shared_ptr<HeroConsumable> copy = this->clone();
-    copy->amount += delta;
-    return copy;
-}
-
-HeroEquipment::HeroEquipment(QString name, QString description, uint32_t price) :
-    HeroItem(name, description, price, 1) {
-
-}
-
-
-std::shared_ptr<Item> HeroEquipment::changeAmount(int delta) const
-{
-    switch(delta) {
-    case -1:
-        return nullptr;
-    default:
-        throw new std::exception();
-    }
-}
-
-HeroWeapon::HeroWeapon(QString name, QString description, uint32_t rawDamage,
-                       uint8_t probability, uint32_t price) :
-    HeroEquipment(name, description, price), rawDamage(rawDamage), probability(probability) {
-
-}
-
-HeroMeleeWeapon::HeroMeleeWeapon(QString name, QString description, uint32_t rawDamage,
-                                 uint8_t probability, uint32_t price) :
-    HeroWeapon(name, description, rawDamage, probability, price) {
-
-}
-
-void HeroMeleeWeapon::equip(Hero* hero) {
-    //TODO: EQUIP
-}
-
-ItemType HeroMeleeWeapon::getType() const noexcept {
-    return ItemType::HERO_MELEE_WEAPON;
-}
-
-
-HeroRangeWeapon::HeroRangeWeapon(QString name, QString description, uint32_t rawDamage,
-                                 uint8_t probability, uint32_t price) :
-    HeroWeapon(name, description, rawDamage, probability, price) {
-
-}
-
-void HeroRangeWeapon::equip(Hero* hero) {
-    //TODO: EQUIP
-}
-
-ItemType HeroRangeWeapon::getType() const noexcept {
-    return ItemType::HERO_RANGE_WEAPON;
-}
-
-
-HeroArmor::HeroArmor(QString name, QString description, uint8_t hitDecreasement,
-                     uint8_t escapeDecreasement, uint32_t price) :
-    HeroEquipment(name, description, price), hitDecreasement(hitDecreasement),
-    escapeDecreasement(escapeDecreasement) {
-
-}
-
-void HeroArmor::equip(Hero* hero) {
-    //TODO: EQUIP
-}
-
-ItemType HeroArmor::getType() const noexcept {
-    return ItemType::HERO_ARMOR;
-}
-
 ShipItem::ShipItem(QString name, QString description, uint32_t price,
                    uint32_t amount) :
     Item(name, description, price, amount){
@@ -216,7 +123,17 @@ ItemType ShipSail::getType() const noexcept {
     return ItemType::SHIP_SAIL;
 }
 
+MapPiece::MapPiece(int partNumber) :
+    KeyItem(("Карта часть#" + std::to_string(partNumber)).c_str(),
+            (partNumber == 1 ? "От Ямайки на восток до суши..." : "затем на юг."),
+            0) {
 
+}
+
+void MapPiece::use(std::shared_ptr<Game> /*game*/) const
+{
+
+}
 
 
 
