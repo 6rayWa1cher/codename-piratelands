@@ -64,4 +64,14 @@ public slots:
     void onTableClicked(const QModelIndex& index);
 };
 
+class BattleItemModel : public InventoryItemModel {
+    Q_OBJECT
+protected:
+    std::shared_ptr<Battle> _battle;
+public:
+    BattleItemModel(QObject* parent, std::shared_ptr<Game> game);
+public slots:
+    void onTableClicked(const QModelIndex& index);
+};
+
 #endif // ITEMMAPMODEL_H

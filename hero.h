@@ -24,9 +24,9 @@ protected:
     std::shared_ptr<ShipCannons> _cannons;
     std::shared_ptr<ShipHull> _hull;
     std::shared_ptr<ShipSail> _sail;
-
 public:
-    Enemy(QString name, std::shared_ptr<World> world, uint16_t health, uint32_t money, std::shared_ptr<ShipBoardingTeam> team = nullptr,
+    Enemy(QString name, std::shared_ptr<World> world, uint16_t health, uint32_t money,
+          std::shared_ptr<ShipBoardingTeam> team = nullptr,
           std::shared_ptr<ShipCannons> cannons = nullptr, std::shared_ptr<ShipHull> hull = nullptr,
           std::shared_ptr<ShipSail> sail = nullptr);
 
@@ -47,6 +47,8 @@ public:
     std::shared_ptr<ShipSail> sail();
 
     void setHealth(const uint16_t &health);
+signals:
+    void health_changed(uint16_t health);
 };
 
 class Hero : public Enemy {
@@ -65,12 +67,11 @@ public:
     void equipCannons(std::shared_ptr<ShipCannons> cannons);
     void equipHull(std::shared_ptr<ShipHull> hull);
     void equipSail(std::shared_ptr<ShipSail> sail);
+    void resurrect();
 
-    QMap<ItemType, QList<std::shared_ptr<Item> > > inventory() const;
+    const QMap<ItemType, QList<std::shared_ptr<Item> > >& inventory() const;
 
     uint16_t currentRoom() const;
-
-    void setHeroHealth(const uint16_t &health);
 
 signals:
     void hero_moved(int room);
@@ -80,7 +81,6 @@ signals:
     void cannons_changed(std::shared_ptr<ShipCannons> cannons);
     void hull_changed(std::shared_ptr<ShipHull> hull);
     void sail_changed(std::shared_ptr<ShipSail> sail);
-    void hero_health_changed(uint16_t health);
     void max_health_changed(uint16_t health);
 };
 

@@ -16,6 +16,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    battle.cpp \
+    battlewindow.cpp \
+    battlewonwindow.cpp \
     game.cpp \
     hero.cpp \
     item.cpp \
@@ -28,6 +31,9 @@ SOURCES += \
     world.cpp
 
 HEADERS += \
+    battle.h \
+    battlewindow.h \
+    battlewonwindow.h \
     game.h \
     hero.h \
     item.h \
@@ -39,6 +45,8 @@ HEADERS += \
     world.h
 
 FORMS += \
+    battlewindow.ui \
+    battlewonwindow.ui \
     itemcollectedwindow.ui \
     mainwindow.ui \
     shopwindow.ui

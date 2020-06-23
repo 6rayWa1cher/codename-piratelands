@@ -28,8 +28,14 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     connect(&(*game->_hero), SIGNAL(hull_changed(std::shared_ptr<ShipHull>)), this, SLOT(replaceHull(std::shared_ptr<ShipHull>)));
     connect(&(*game->_hero), SIGNAL(sail_changed(std::shared_ptr<ShipSail>)), this, SLOT(replaceSail(std::shared_ptr<ShipSail>)));
     connect(&(*game->_world), SIGNAL(worldChanged()), this, SLOT(rerenderCurrentRoom()));
-    connect(&(*game->_hero), SIGNAL(hero_health_changed(uint16_t)), this, SLOT(updateHeroHealth(uint16_t)));
+    connect(&(*game->_hero), SIGNAL(health_changed(uint16_t)), this, SLOT(updateHeroHealth(uint16_t)));
     connect(&(*game->_hero), SIGNAL(max_health_changed(uint16_t)), this, SLOT(updateHeroMaxHealth(uint16_t)));
+    connect(&(*game->_battle), SIGNAL(battleOver(std::shared_ptr<Enemy>, BattleWonResult)), this, SLOT(encountEnd(std::shared_ptr<Enemy>, BattleWonResult)));
+    connect(&(*game->_world), SIGNAL(encounter(EncounterType, std::shared_ptr<Enemy>)), this, SLOT(startEncount(EncounterType, std::shared_ptr<Enemy>)));
+    replaceHull(game->_hero->hull());
+    replaceSail(game->_hero->sail());
+    replaceTeam(game->_hero->team());
+    replaceCannons(game->_hero->cannons());
 }
 
 MainWindow::~MainWindow() {
@@ -106,5 +112,15 @@ void MainWindow::updateHeroHealth(uint16_t health) {
 void MainWindow::updateHeroMaxHealth(uint16_t health) {
     ui->health_bar->setMaximum(health);
 
+}
+
+void MainWindow::startEncount(EncounterType /*type*/, std::shared_ptr<Enemy> /*enemy*/)
+{
+    this->setDisabled(true);
+}
+
+void MainWindow::encountEnd(std::shared_ptr<Enemy> /*enemy*/, BattleWonResult /*result*/)
+{
+    this->setDisabled(false);
 }
 

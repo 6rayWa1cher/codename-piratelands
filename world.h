@@ -5,6 +5,7 @@
 #include <QObject>
 #include <memory>
 
+class Enemy;
 class Hero;
 enum class ItemType;
 
@@ -74,7 +75,7 @@ private:
     void updateInfo();
 };
 
-class World : public QObject {
+class World : public QObject, public std::enable_shared_from_this<World> {
     Q_OBJECT
 private:
     QVector<std::shared_ptr<Room>> _rooms;
@@ -82,13 +83,13 @@ public:
     World(QObject* parent);
     std::shared_ptr<Room> operator [](int index) const;
     void init();
-    void sendEncounter(EncounterType type, std::shared_ptr<Hero> enemy);
+    void sendEncounter(EncounterType type, std::shared_ptr<Enemy> enemy);
     void sendWorldChanged();
     void grantItem(std::shared_ptr<Hero> hero, std::shared_ptr<Item> item);
     void heroMoved(std::shared_ptr<Hero> hero, int index);
 signals:
     void worldChanged();
-    void encounter(EncounterType type, std::shared_ptr<Hero> enemy);
+    void encounter(EncounterType type, std::shared_ptr<Enemy> enemy);
     void loudAddItem(std::shared_ptr<Item> item);
 public slots:
     void encounterSuccessful(int index, std::shared_ptr<Hero> hero);

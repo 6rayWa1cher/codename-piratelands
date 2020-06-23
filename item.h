@@ -18,6 +18,10 @@ enum class ItemType {
 
 const ItemType LAST_ITEM_TYPE = ItemType::SHIP_SAIL;
 
+class UniqueItemException : public std::exception {
+
+};
+
 // ABSTRACT SECTION
 
 class Item : public std::enable_shared_from_this<Item> {
@@ -30,6 +34,8 @@ public:
     virtual ItemType getType() const noexcept = 0;
     virtual std::shared_ptr<Item> changeAmount(int delta) const = 0;
 };
+bool operator==(const Item& i1, const Item& i2);
+bool operator!=(const Item& i1, const Item& i2);
 
 class KeyItem : public Item {
 public:

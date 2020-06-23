@@ -156,3 +156,24 @@ void CharacteristicsItemModel::onTableClicked(const QModelIndex& index) {
 
     }
 }
+
+BattleItemModel::BattleItemModel(QObject *parent, std::shared_ptr<Game> game) :
+    InventoryItemModel(parent, game, {ItemType::SHIP_CONSUMABLE}, false), _battle(game->_battle)
+{
+
+}
+
+void BattleItemModel::onTableClicked(const QModelIndex &index)
+{
+    if (index.isValid()) {
+        std::shared_ptr<Item> item = getItemFromIndex(index);
+        switch (item->getType()) {
+        case ItemType::SHIP_CONSUMABLE:
+            _battle->clickItem(item);
+            break;
+        default:
+            break;
+        }
+
+    }
+}

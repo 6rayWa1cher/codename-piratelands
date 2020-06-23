@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
     auto playerName = QInputDialog::getText(nullptr, "PirateLands", "Enter your name");
     std::shared_ptr<Game> game = std::make_shared<Game>(playerName);
     ShopWindow s(nullptr, game);
+    BattleWindow bw(nullptr, game);
     MainWindow w(nullptr, &s, game);
     w.setFixedSize(w.size());
     w.show();

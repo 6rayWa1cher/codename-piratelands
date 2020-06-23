@@ -24,7 +24,7 @@ std::shared_ptr<Item> KeyItem::changeAmount(int delta) const
     case -1:
         return nullptr;
     default:
-        throw new std::exception();
+        throw UniqueItemException();
     }
 }
 
@@ -66,7 +66,7 @@ std::shared_ptr<Item> ShipEquipment::changeAmount(int delta) const
     case -1:
         return nullptr;
     default:
-        throw new std::exception();
+        throw UniqueItemException();
     }
 }
 
@@ -180,7 +180,7 @@ std::shared_ptr<ShipConsumable> HealingItem::consume(Hero *hero) {
     auto newItem = this->changeAmount(-1);
     newHealth = std::min(maxUnitHealth, newHealth);
 
-    hero->setHeroHealth(newHealth);
+    hero->setHealth(newHealth);
     hero->removeItem(this->clone());
     if(newItem) hero->addItem(newItem);
     return std::dynamic_pointer_cast<ShipConsumable>(newItem);
@@ -221,4 +221,15 @@ std::shared_ptr<ShipConsumable> BuckshotItem::clone() const {
     return std::static_pointer_cast<ShipConsumable>(
                 std::make_shared<BuckshotItem>(this->name, this->description, this->price, this->amount)
                 );
+}
+
+bool operator==(const Item &i1, const Item &i2)
+{
+    return i1.name == i2.name &&
+            i1.description == i2.description;
+}
+
+bool operator!=(const Item &i1, const Item &i2)
+{
+    return !(i1 == i2);
 }

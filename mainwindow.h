@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "battlewindow.h"
 #include "game.h"
 #include "shopwindow.h"
 
@@ -13,11 +14,13 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr, ShopWindow* _shopWindow = nullptr, std::shared_ptr<Game> game = nullptr);
+    MainWindow(QWidget *parent = nullptr, ShopWindow* _shopWindow = nullptr,
+               std::shared_ptr<Game> game = nullptr);
     ~MainWindow();
 
 private:
     ShopWindow* _shopWindow;
+    BattleWindow* _battleWindow;
     InventoryItemModel _worldInventoryModel;
     CharacteristicsItemModel _characteristicsInventoryModel;
     Ui::MainWindow *ui;
@@ -37,5 +40,7 @@ public slots:
     void replaceSail(std::shared_ptr<ShipSail> sail);
     void updateHeroHealth(uint16_t health);
     void updateHeroMaxHealth(uint16_t health);
+    void startEncount(EncounterType type, std::shared_ptr<Enemy> enemy);
+    void encountEnd(std::shared_ptr<Enemy> enemy, BattleWonResult result);
 };
 #endif // MAINWINDOW_H

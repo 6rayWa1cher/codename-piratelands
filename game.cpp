@@ -6,6 +6,7 @@ Game::Game(QString name) {
     _world = std::make_shared<World>(nullptr);
     _hero = std::make_shared<Hero>(name, _world);
     _shop = std::make_shared<Shop>(this);
+    _battle = std::make_shared<Battle>(this, this);
     QObject::connect(&*_hero, SIGNAL(hero_moved(int)), this, SLOT(heroMoved(int)));
     _shop->addItem(
                 std::make_shared<ShipCannons>("C1", "Basic cannons", 18, 25, 1, 0)
@@ -17,7 +18,7 @@ Game::Game(QString name) {
                 std::make_shared<BombItem>("Bomb", "Bomb da enemy's s", 40, 0, 1)
                 );
     _shop->addItem(
-                std::make_shared<HealingItem>("Wooden plank", "Healing your health", 55, 0, 1)
+                std::make_shared<HealingItem>("Wooden plank", "Healing your health", 55, 5, 1)
                 );
     _shop->addItem(
                 std::make_shared<ShipCannons>("C2", "UnBasic cannons", 321, 255, 1, 0)

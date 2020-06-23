@@ -163,11 +163,24 @@ void World::init() {
     _rooms.append(std::make_shared<Sea>(this, 13, 20, 1, 18)); // B4
     _rooms.append(std::make_shared<Sea>(this, 14, 21, 2, 19)); // C4
     _rooms.append(std::make_shared<Sea>(this, 15, 22, 3, 20)); // D4
-    _rooms.append(std::make_shared<Island>(this, "Остров Кюрасао, Голландия", "Отдаленный тихий уголок", 16, 23, 4, 21)); // E4
+    _rooms.append(std::make_shared<Island>(this, "Остров Кюрасао, Голландия", "Отдаленный тихий уголок", 16, 23, 4, 21,
+                                           [](Island* island, std::shared_ptr<Hero> /*hero*/) {
+//                      if (island->firstTimeStep()) {
+                          island->_world->sendEncounter(EncounterType::SEA, std::make_shared<Enemy> (
+                          "Пират", island->_world->shared_from_this(), 120, 100,
+                          std::make_shared<ShipBoardingTeam>("Корабельные крысы", "Бухие оборванцы", 20, 50),
+                          std::make_shared<ShipCannons>("Бомбарды", "Ужасные пушки", 20, 30, 1, 250),
+                          std::make_shared<ShipHull>("Деревянный корпус", "Легкий корпус быстрого корабля", 120, 25, 0, 0, 1, 0, 2500),
+                          std::make_shared<ShipSail>("2-х мачтовый", "Стандартные паруса", 41, 35, 50)
+                          ));
+//                      }
+                  },
+                  [](Island*, std::shared_ptr<Hero>) {}
+    )); // E4
     _rooms.append(std::make_shared<Sea>(this, 17, 18, 5, 22)); // F4
 }
 
-void World::sendEncounter(EncounterType type, std::shared_ptr<Hero> enemy) {
+void World::sendEncounter(EncounterType type, std::shared_ptr<Enemy> enemy) {
     emit encounter(type, enemy);
 }
 

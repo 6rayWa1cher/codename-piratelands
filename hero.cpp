@@ -34,7 +34,7 @@ std::shared_ptr<ShipSail> Enemy::sail() {
     return _sail;
 }
 
-QMap<ItemType, QList<std::shared_ptr<Item> > > Hero::inventory() const
+const QMap<ItemType, QList<std::shared_ptr<Item> > >& Hero::inventory() const
 {
     return _inventory;
 }
@@ -44,11 +44,6 @@ uint16_t Hero::currentRoom() const
     return _currentRoom;
 }
 
-void Hero::setHeroHealth(const uint16_t &health) {
-    _health = health;
-    emit hero_health_changed(health);
-}
-
 std::shared_ptr<ShipBoardingTeam> Enemy::team() {
     return _team;
 }
@@ -56,13 +51,24 @@ std::shared_ptr<ShipBoardingTeam> Enemy::team() {
 Enemy::Enemy(QString name, std::shared_ptr<World> world, uint16_t health, uint32_t money, std::shared_ptr<ShipBoardingTeam> team,
              std::shared_ptr<ShipCannons> cannons, std::shared_ptr<ShipHull> hull,
              std::shared_ptr<ShipSail> sail)
-    : _name(name), _world(world), _team(team), _cannons(cannons), _hull(hull), _sail(sail), _health(health), _maxHealth(health),
+    : _name(name), _world(world),
+      _team(team),
+      _cannons(cannons),
+      _hull(hull),
+      _sail(sail),
+      _health(health),
+      _maxHealth(health),
       _money(money){
 
 }
 
 Hero::Hero(QString name, std::shared_ptr<World> world) :
-    Enemy(name, world, 150, 5)
+    Enemy(name, world, 150, 5,
+          std::make_shared<ShipBoardingTeam>("Корабельные крысы", "Бухие оборванцы", 20, 50),
+          std::make_shared<ShipCannons>("12-фунтовые пушки", "Обычные пушки, подойдут для любой задачи", 60, 50, 2, 400),
+          std::make_shared<ShipHull>("Полу-бронированный корпус", "Корпус-универсал", 150, 35, 53, 28, 2, 50, 1000),
+          std::make_shared<ShipSail>("2-х мачтовый", "Стандартные паруса", 41, 35, 50)
+          )
 {
     _currentRoom = 15;
     for (int i = 0; i < int(LAST_ITEM_TYPE); ++i) {
@@ -142,7 +148,7 @@ void Hero::equipHull(std::shared_ptr<ShipHull> hull) {
     setHealth(std::min(health(), maxHealth()));
     emit hull_changed(hull);
     emit max_health_changed(_maxHealth);
-    emit hero_health_changed(_health);
+    emit health_changed(_health);
 }
 
 void Hero::equipSail(std::shared_ptr<ShipSail> sail) {
@@ -150,6 +156,15 @@ void Hero::equipSail(std::shared_ptr<ShipSail> sail) {
     emit sail_changed(sail);
 }
 
+void Hero::resurrect()
+{
+    _health = _maxHealth * 0.8;
+    _currentRoom = 15;
+    emit health_changed(_health);
+    emit hero_moved(15);
+}
+
 void Enemy::setHealth(const uint16_t &health) {
     _health = health;
+    emit health_changed(_health);
 }
