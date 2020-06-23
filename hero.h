@@ -17,6 +17,7 @@ class Enemy : public QObject {
 protected:
     QString _name;
     uint16_t _health;
+    uint16_t _maxHealth;
     uint32_t _money;
     std::shared_ptr<World> _world;
     std::shared_ptr<ShipBoardingTeam> _team;
@@ -32,6 +33,8 @@ public:
     QString name() const;
 
     uint16_t health() const;
+
+    uint16_t maxHealth() const;
 
     uint32_t money() const;
 
@@ -67,6 +70,7 @@ public:
 
     uint16_t currentRoom() const;
 
+    void setHeroHealth(const uint16_t &health);
 
 signals:
     void hero_moved(int room);
@@ -76,6 +80,8 @@ signals:
     void cannons_changed(std::shared_ptr<ShipCannons> cannons);
     void hull_changed(std::shared_ptr<ShipHull> hull);
     void sail_changed(std::shared_ptr<ShipSail> sail);
+    void hero_health_changed(uint16_t health);
+    void max_health_changed(uint16_t health);
 };
 
 #endif // HERO_H

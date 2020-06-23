@@ -30,21 +30,30 @@ bool Shop::heroToShopTrade(std::shared_ptr<Hero> hero, std::shared_ptr<Item> ite
         throw new std::exception();
     }
     if (hero->changeMoney(static_cast<int64_t>(item->price))) {
+        auto replaceItem = item->changeAmount(-1);
         this->addItem(item);
         hero->removeItem(item);
+        if(replaceItem) hero->addItem(replaceItem);
         return true;
     }
     return false;
 }
 
-void Shop::addItem(std::shared_ptr<Item> item)
-{
+void Shop::addItem(std::shared_ptr<Item> item) {
     auto& itemGroupInShop = _globalShop[item->getType()];
-    if (!itemGroupInShop.contains(item)) {
+    int i = 0;
+    for(i = 0; i < itemGroupInShop.size(); i++) {
+        if(itemGroupInShop[i]->name == item->name &&
+           itemGroupInShop[i]->description == item->description &&
+           itemGroupInShop[i]->price == item->price) break;
+    }
+    if (i == itemGroupInShop.size()) {
         itemGroupInShop.push_back(item);
     } else {
+        if(item->getType() == ItemType::SHIP_CONSUMABLE) return;
         auto newItem = item->changeAmount(1);
-        itemGroupInShop.replace(itemGroupInShop.indexOf(item), newItem);
+        removeItem(itemGroupInShop[i]);
+        itemGroupInShop.append(newItem);
     }
     emit shopChanged(_globalShop);
 }
@@ -56,6 +65,7 @@ void Shop::removeItem(std::shared_ptr<Item> item)
         std::cerr << "Can't remove item which isn't presented" << std::endl;
         return;
     }
+    if(item->getType() == ItemType::SHIP_CONSUMABLE) return;
     auto newItem = item->changeAmount(-1);
     if (newItem) {
         itemGroupInShop.replace(itemGroupInShop.indexOf(item), newItem);

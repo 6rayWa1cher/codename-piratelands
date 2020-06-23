@@ -9,7 +9,6 @@ ItemCollectedWindow::ItemCollectedWindow(QWidget *parent, std::shared_ptr<Item> 
     ui->item_name->setText(item->name);
 }
 
-ItemCollectedWindow::~ItemCollectedWindow()
-{
+ItemCollectedWindow::~ItemCollectedWindow() {
     delete ui;
 }
