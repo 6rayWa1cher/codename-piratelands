@@ -14,6 +14,12 @@ Game::Game(QString name) {
                 std::make_shared<ShipHull>("H1", "Basic hull", 30, 0, 1, 0, 1, 0, 0)
                 );
     _shop->addItem(
+                std::make_shared<BombItem>("Bomb", "Bomb da enemy's s", 40, 0, 1)
+                );
+    _shop->addItem(
+                std::make_shared<HealingItem>("Wooden plank", "Healing your health", 55, 0, 1)
+                );
+    _shop->addItem(
                 std::make_shared<ShipCannons>("C2", "UnBasic cannons", 321, 255, 1, 0)
                 );
     _shop->addItem(
@@ -30,9 +36,9 @@ Game::Game(QString name) {
                 );
     _hero->addItem(std::make_shared<ShipBoardingTeam>("jipwert", "111fgasdjkpi", 100500, 0));
     _hero->addItem(std::make_shared<ShipBoardingTeam>("hioltu", "opha3rt9054y8p", 23048, 0));
+    _hero->addItem(std::make_shared<HealingItem>("Metal list", "Healing your health", 120, 0, 1));
 }
 
-void Game::heroMoved(int index)
-{
+void Game::heroMoved(int index) {
     _world->heroMoved(_hero, index);
 }

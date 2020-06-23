@@ -148,6 +148,8 @@ void CharacteristicsItemModel::onTableClicked(const QModelIndex& index) {
         case ItemType::SHIP_BOARDING_TEAM:
             std::dynamic_pointer_cast<ShipEquipment>(item)->equip(&*_hero);
             break;
+        case ItemType::SHIP_CONSUMABLE:
+            std::dynamic_pointer_cast<ShipConsumable>(item)->consume(&*_hero);
         default:
             break;
         }

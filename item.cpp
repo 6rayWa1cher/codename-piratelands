@@ -1,5 +1,7 @@
 #include "item.h"
 #include "game.h"
+#include <algorithm>
+#include <iostream>
 
 Item::Item(QString name, QString description, uint32_t price, uint32_t amount) :
     name(name), description(description), price(price), amount(amount){
@@ -44,7 +46,7 @@ ItemType ShipConsumable::getType() const noexcept {
 
 std::shared_ptr<Item> ShipConsumable::changeAmount(int delta) const
 {
-    if (delta < 0 && static_cast<uint32_t>(-delta) > amount) {
+    if (delta < 0 && static_cast<uint32_t>(-delta) >= amount) {
         return nullptr;
     }
     std::shared_ptr<ShipConsumable> copy = this->clone();
@@ -162,4 +164,61 @@ void ShipBoardingTeam::equip(Hero *hero)
 ItemType ShipBoardingTeam::getType() const noexcept
 {
     return ItemType::SHIP_BOARDING_TEAM;
+}
+
+HealingItem::HealingItem(QString name, QString description, uint16_t heal, uint32_t price, uint32_t amount)
+    : ShipConsumable(name, description, price, amount), heal(heal){
+
+}
+
+std::shared_ptr<ShipConsumable> HealingItem::consume(Hero *hero) {
+    uint16_t maxUnitHealth = hero->maxHealth();
+    uint16_t unitHealth = hero->health();
+    if(maxUnitHealth == unitHealth) return this->clone();
+
+    uint16_t newHealth = unitHealth + heal;
+    auto newItem = this->changeAmount(-1);
+    newHealth = std::min(maxUnitHealth, newHealth);
+
+    hero->setHeroHealth(newHealth);
+    hero->removeItem(this->clone());
+    if(newItem) hero->addItem(newItem);
+    return std::dynamic_pointer_cast<ShipConsumable>(newItem);
+}
+
+std::shared_ptr<ShipConsumable> HealingItem::clone() const {
+    return std::static_pointer_cast<ShipConsumable>(
+                std::make_shared<HealingItem>(this->name, this->description, this->heal, this->price, this->amount)
+                );
+}
+
+BombItem::BombItem(QString name, QString description, uint32_t damage, uint32_t price, uint32_t amount)
+    : ShipConsumable(name, description, price, amount), damage(damage) {
+
+}
+
+std::shared_ptr<ShipConsumable> BombItem::consume(Hero *hero) {
+    // TODO add implementation
+    return nullptr;
+}
+
+std::shared_ptr<ShipConsumable> BombItem::clone() const {
+    return std::static_pointer_cast<ShipConsumable>(
+                std::make_shared<BombItem>(this->name, this->description, this->damage, this->price, this->amount)
+                );
+}
+
+BuckshotItem::BuckshotItem(QString name, QString description, uint32_t price, uint32_t amount)
+    : ShipConsumable(name, description, price, amount) {
+
+}
+
+std::shared_ptr<ShipConsumable> BuckshotItem::consume(Hero *hero) {
+    // TODO using
+}
+
+std::shared_ptr<ShipConsumable> BuckshotItem::clone() const {
+    return std::static_pointer_cast<ShipConsumable>(
+                std::make_shared<BuckshotItem>(this->name, this->description, this->price, this->amount)
+                );
 }

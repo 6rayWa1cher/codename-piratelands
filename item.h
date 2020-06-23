@@ -115,4 +115,31 @@ public:
     void use(std::shared_ptr<Game> game) const override;
 };
 
+class HealingItem : public ShipConsumable {
+public:
+    const uint16_t heal;
+    HealingItem(QString name, QString description, uint16_t heal, uint32_t price = 0,
+                uint32_t amount = 1);
+    std::shared_ptr<ShipConsumable> consume(Hero *hero) override;
+    std::shared_ptr<ShipConsumable> clone() const override;
+};
+
+class BombItem : public ShipConsumable {
+public:
+    const uint32_t damage;
+    BombItem(QString name = "Bomb", QString description = "With a 50% chance, deals damage per turn to the enemy for two turns", uint32_t damage = 40, uint32_t price = 500,
+         uint32_t amount = 1);
+    std::shared_ptr<ShipConsumable> consume(Hero *hero) override;
+    std::shared_ptr<ShipConsumable> clone() const override;
+};
+
+class BuckshotItem : public ShipConsumable {
+public:
+    BuckshotItem(QString name = "Buckshot", QString description = "With a 50% chance reduces the boarding power of the enemy team by 50%", uint32_t price = 500,
+                 uint32_t amount = 1);
+    std::shared_ptr<ShipConsumable> consume(Hero *hero) override;
+    std::shared_ptr<ShipConsumable> clone() const override;
+};
+
+
 #endif // ITEM_H

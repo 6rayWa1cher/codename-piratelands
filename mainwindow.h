@@ -35,5 +35,7 @@ public slots:
     void replaceCannons(std::shared_ptr<ShipCannons> cannons);
     void replaceHull(std::shared_ptr<ShipHull> hull);
     void replaceSail(std::shared_ptr<ShipSail> sail);
+    void updateHeroHealth(uint16_t health);
+    void updateHeroMaxHealth(uint16_t health);
 };
 #endif // MAINWINDOW_H

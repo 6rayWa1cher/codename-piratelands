@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "item.h"
 #include "itemcollectedwindow.h"
+#include <iostream>
 
 
 MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<Game> game)
@@ -27,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     connect(&(*game->_hero), SIGNAL(hull_changed(std::shared_ptr<ShipHull>)), this, SLOT(replaceHull(std::shared_ptr<ShipHull>)));
     connect(&(*game->_hero), SIGNAL(sail_changed(std::shared_ptr<ShipSail>)), this, SLOT(replaceSail(std::shared_ptr<ShipSail>)));
     connect(&(*game->_world), SIGNAL(worldChanged()), this, SLOT(rerenderCurrentRoom()));
+    connect(&(*game->_hero), SIGNAL(hero_health_changed(uint16_t)), this, SLOT(updateHeroHealth(uint16_t)));
+    connect(&(*game->_hero), SIGNAL(max_health_changed(uint16_t)), this, SLOT(updateHeroMaxHealth(uint16_t)));
 }
 
 MainWindow::~MainWindow() {
@@ -95,3 +98,13 @@ void MainWindow::replaceSail(std::shared_ptr<ShipSail> sail) {
     ui->equipped_armor_name->setText(sail->name);
     ui->equipped_armor_name->setToolTip(sail->description);
 }
+
+void MainWindow::updateHeroHealth(uint16_t health) {
+    ui->health_bar->setValue(int(health));
+}
+
+void MainWindow::updateHeroMaxHealth(uint16_t health) {
+    ui->health_bar->setMaximum(health);
+
+}
+

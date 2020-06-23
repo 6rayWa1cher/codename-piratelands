@@ -12,6 +12,11 @@ uint16_t Enemy::health() const
     return _health;
 }
 
+uint16_t Enemy::maxHealth() const
+{
+    return _maxHealth;
+}
+
 uint32_t Enemy::money() const
 {
     return _money;
@@ -39,20 +44,22 @@ uint16_t Hero::currentRoom() const
     return _currentRoom;
 }
 
-std::shared_ptr<ShipBoardingTeam> Enemy::team()
-{
+void Hero::setHeroHealth(const uint16_t &health) {
+    _health = health;
+    emit hero_health_changed(health);
+}
+
+std::shared_ptr<ShipBoardingTeam> Enemy::team() {
     return _team;
 }
 
 Enemy::Enemy(QString name, std::shared_ptr<World> world, uint16_t health, uint32_t money, std::shared_ptr<ShipBoardingTeam> team,
              std::shared_ptr<ShipCannons> cannons, std::shared_ptr<ShipHull> hull,
              std::shared_ptr<ShipSail> sail)
-    : _name(name), _world(world), _team(team), _cannons(cannons), _hull(hull), _sail(sail), _health(health),
+    : _name(name), _world(world), _team(team), _cannons(cannons), _hull(hull), _sail(sail), _health(health), _maxHealth(health),
       _money(money){
 
 }
-
-
 
 Hero::Hero(QString name, std::shared_ptr<World> world) :
     Enemy(name, world, 150, 5)
@@ -70,11 +77,18 @@ void Hero::move(Direction dir) {
 
 void Hero::addItem(std::shared_ptr<Item> item) {
     auto& itemGroupInShop = _inventory[item->getType()];
-    if (!itemGroupInShop.contains(item)) {
+    int i = 0;
+    for(i = 0; i < itemGroupInShop.size(); i++) {
+        if(itemGroupInShop[i]->name == item->name &&
+           itemGroupInShop[i]->description == item->description &&
+           itemGroupInShop[i]->price == item->price) break;
+    }
+    if (i == itemGroupInShop.size()) {
         itemGroupInShop.push_back(item);
     } else {
-        auto newItem = item->changeAmount(item->amount);
-        itemGroupInShop.replace(itemGroupInShop.indexOf(item), newItem);
+        auto newItem = item->changeAmount(itemGroupInShop[i]->amount);
+        this->removeItem(itemGroupInShop[i]);
+        itemGroupInShop.append(newItem);
     }
     emit inventory_changed(_inventory);
 }
@@ -124,7 +138,11 @@ void Hero::equipCannons(std::shared_ptr<ShipCannons> cannons) {
 
 void Hero::equipHull(std::shared_ptr<ShipHull> hull) {
     _hull = hull;
+    _maxHealth = 150 + hull->baseHealth;
+    setHealth(std::min(health(), maxHealth()));
     emit hull_changed(hull);
+    emit max_health_changed(_maxHealth);
+    emit hero_health_changed(_health);
 }
 
 void Hero::equipSail(std::shared_ptr<ShipSail> sail) {
@@ -132,7 +150,6 @@ void Hero::equipSail(std::shared_ptr<ShipSail> sail) {
     emit sail_changed(sail);
 }
 
-void Enemy::setHealth(const uint16_t &health)
-{
+void Enemy::setHealth(const uint16_t &health) {
     _health = health;
 }
