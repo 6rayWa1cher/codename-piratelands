@@ -3,6 +3,7 @@
 
 #include "battle.h"
 #include "battlewonwindow.h"
+#include "enemystatsmodel.h"
 #include "itemmapmodel.h"
 
 #include <QDialog>
@@ -18,6 +19,8 @@ private:
     std::shared_ptr<Game> _game;
     BattleWonWindow _bww;
     BattleItemModel _model;
+    EnemyStatsModel _heroStatsModel;
+    EnemyStatsModel _enemyStatsModel;
     Ui::BattleWindow *ui;
 public:
     BattleWindow(QWidget *parent = nullptr,

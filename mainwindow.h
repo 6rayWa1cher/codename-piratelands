@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "battlewindow.h"
+#include "enemystatsmodel.h"
 #include "game.h"
 #include "shopwindow.h"
 
@@ -23,6 +24,7 @@ private:
     BattleWindow* _battleWindow;
     InventoryItemModel _worldInventoryModel;
     CharacteristicsItemModel _characteristicsInventoryModel;
+    EnemyStatsModel _heroStatsModel;
     Ui::MainWindow *ui;
     std::shared_ptr<Game> _game;
 public slots:
@@ -34,10 +36,6 @@ public slots:
     void moveWest();
     void moveSouth();
     void displayShop();
-    void replaceTeam(std::shared_ptr<ShipBoardingTeam> team);
-    void replaceCannons(std::shared_ptr<ShipCannons> cannons);
-    void replaceHull(std::shared_ptr<ShipHull> hull);
-    void replaceSail(std::shared_ptr<ShipSail> sail);
     void updateHeroHealth(uint16_t health);
     void updateHeroMaxHealth(uint16_t health);
     void startEncount(EncounterType type, std::shared_ptr<Enemy> enemy);

@@ -19,6 +19,7 @@ SOURCES += \
     battle.cpp \
     battlewindow.cpp \
     battlewonwindow.cpp \
+    enemystatsmodel.cpp \
     game.cpp \
     hero.cpp \
     item.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     battle.h \
     battlewindow.h \
     battlewonwindow.h \
+    enemystatsmodel.h \
     game.h \
     hero.h \
     item.h \
