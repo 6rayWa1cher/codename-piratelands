@@ -42,5 +42,9 @@ public slots:
     void encountEnd(std::shared_ptr<Enemy> enemy, BattleWonResult result);
     void setHeroName(QString name);
     void moneyChanged(int money);
+    void replaceTeam(std::shared_ptr<ShipBoardingTeam> team);
+    void replaceCannons(std::shared_ptr<ShipCannons> cannons);
+    void replaceHull(std::shared_ptr<ShipHull> hull);
+    void replaceSail(std::shared_ptr<ShipSail> sail);
 };
 #endif // MAINWINDOW_H

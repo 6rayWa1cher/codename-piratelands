@@ -86,21 +86,15 @@ void MainWindow::displayShop() {
 }
 
 void MainWindow::replaceTeam(std::shared_ptr<ShipBoardingTeam> team) {
-    ui->team_name->setText(team->name);
-    ui->team_name->setToolTip(team->description);
     ui->bp_value->display(team->baseBoardingPower * (100 - _game->_hero->hull()->boardingPowerDecreasement) / 100);
 }
 
 void MainWindow::replaceCannons(std::shared_ptr<ShipCannons> cannons) {
-    ui->equipped_melee_weapon_name->setText(cannons->name);
-    ui->equipped_melee_weapon_name->setToolTip(cannons->description);
     ui->atk_value->display(cannons->baseAttack);
     ui->acc_value->display(cannons->baseAccuracy);
 }
 
 void MainWindow::replaceHull(std::shared_ptr<ShipHull> hull) {
-    ui->equipped_range_weapon_name->setText(hull->name);
-    ui->equipped_range_weapon_name->setToolTip(hull->description);
     ui->arm_value->display(hull->baseArmor);
     ui->wc_value->display(hull->baseCarryingCapacity);
     updateHeroMaxHealth(_game->_hero->maxHealth());
@@ -108,8 +102,6 @@ void MainWindow::replaceHull(std::shared_ptr<ShipHull> hull) {
 }
 
 void MainWindow::replaceSail(std::shared_ptr<ShipSail> sail) {
-    ui->equipped_armor_name->setText(sail->name);
-    ui->equipped_armor_name->setToolTip(sail->description);
     ui->ev_value->display(sail->baseEvasion * (100 - _game->_hero->hull()->evasionDecreasement) / 100);
     ui->esc_value->display(sail->baseEscape * (100 - _game->_hero->hull()->escapeDecreasement) / 100);
 }
