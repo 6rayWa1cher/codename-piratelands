@@ -10,13 +10,11 @@ BattleWonWindow::BattleWonWindow(BattleWindow* battleWindow) :
     QObject::connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(acceptItems()));
 }
 
-BattleWonWindow::~BattleWonWindow()
-{
+BattleWonWindow::~BattleWonWindow() {
     delete ui;
 }
 
-void BattleWonWindow::show(BattleWonResult result)
-{
+void BattleWonWindow::show(BattleWonResult result) {
     ui->item1->setText(QString("Золото: ") + std::to_string(result.gold).c_str());
     if (result.item) {
         ui->item2->show();
@@ -33,8 +31,7 @@ void BattleWonWindow::show(BattleWonResult result)
     QDialog::show();
 }
 
-void BattleWonWindow::acceptItems()
-{
+void BattleWonWindow::acceptItems() {
     hide();
     emit accepted();
 }

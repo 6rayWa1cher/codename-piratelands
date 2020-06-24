@@ -3,6 +3,7 @@
 
 #include "battle.h"
 #include "battlewonwindow.h"
+#include "battlelostwindow.h"
 #include "enemystatsmodel.h"
 #include "itemmapmodel.h"
 
@@ -18,6 +19,7 @@ class BattleWindow : public QDialog
 private:
     std::shared_ptr<Game> _game;
     BattleWonWindow _bww;
+    battlelostwindow _blw;
     BattleItemModel _model;
     EnemyStatsModel _heroStatsModel;
     EnemyStatsModel _enemyStatsModel;

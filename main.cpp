@@ -3,8 +3,7 @@
 #include <QApplication>
 #include <QInputDialog>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     auto playerName = QInputDialog::getText(nullptr, "PirateLands", "Enter your name");
     std::shared_ptr<Game> game = std::make_shared<Game>(playerName);
@@ -14,6 +13,7 @@ int main(int argc, char *argv[])
     s.setFixedSize(s.size());
     bw.setFixedSize(bw.size());
     w.setFixedSize(w.size());
+    w.setWindowTitle("PirateLands");
     w.show();
     return a.exec();
 }

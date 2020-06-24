@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "battlewindow.h"
 #include "enemystatsmodel.h"
+#include "itemcollectedwindow.h"
 #include "game.h"
 #include "shopwindow.h"
 
@@ -22,6 +23,7 @@ public:
 private:
     ShopWindow* _shopWindow;
     BattleWindow* _battleWindow;
+    ItemCollectedWindow* _itemCollectedWindow;
     InventoryItemModel _worldInventoryModel;
     CharacteristicsItemModel _characteristicsInventoryModel;
     EnemyStatsModel _heroStatsModel;
@@ -46,5 +48,6 @@ public slots:
     void replaceCannons(std::shared_ptr<ShipCannons> cannons);
     void replaceHull(std::shared_ptr<ShipHull> hull);
     void replaceSail(std::shared_ptr<ShipSail> sail);
+    void updateStats();
 };
 #endif // MAINWINDOW_H

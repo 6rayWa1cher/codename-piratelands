@@ -19,6 +19,16 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     ui->characteristics_inventorty_view->setModel(&_characteristicsInventoryModel);
     ui->hero_slots->setModel(&_heroStatsModel);
     ui->hero_slots->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    ui->characteristics_inventorty_view->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    ui->characteristics_inventorty_view->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->characteristics_inventorty_view->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->hero_slots->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    ui->hero_slots->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    ui->hero_slots->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->inventory->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    ui->inventory->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->inventory->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->acc_value->setSegmentStyle(QLCDNumber::SegmentStyle::Filled);
     connect(ui->characteristics_inventorty_view, SIGNAL(doubleClicked(const QModelIndex &)), &_characteristicsInventoryModel, SLOT(onTableClicked(const QModelIndex &)));
     connect(&(*game->_hero), SIGNAL(hero_moved(int)), this, SLOT(enterRoom(int)));
     connect(ui->north, SIGNAL(clicked()), this, SLOT(moveNorth()));
@@ -31,7 +41,9 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     connect(&(*game->_hero), SIGNAL(max_health_changed(uint16_t)), this, SLOT(updateHeroMaxHealth(uint16_t)));
     connect(&(*game->_battle), SIGNAL(battleOver(std::shared_ptr<Enemy>, BattleWonResult)), this, SLOT(encountEnd(std::shared_ptr<Enemy>, BattleWonResult)));
     connect(&(*game->_world), SIGNAL(encounter(EncounterType, std::shared_ptr<Enemy>)), this, SLOT(startEncount(EncounterType, std::shared_ptr<Enemy>)));
+    connect(&_characteristicsInventoryModel, SIGNAL(stat_changed()), this, SLOT(updateStats()));
     QObject::connect(&*game->_hero, SIGNAL(money_changed(int)), this, SLOT(moneyChanged(int)));
+    connect(&(*(game->_world)), SIGNAL(loudAddItem(std::shared_ptr<Item>)), this, SLOT(presentNewItem(std::shared_ptr<Item>)));
     replaceHull(game->_hero->hull());
     replaceSail(game->_hero->sail());
     replaceTeam(game->_hero->team());
@@ -43,15 +55,14 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::rerenderCurrentRoom()
-{
+void MainWindow::rerenderCurrentRoom() {
     enterRoom(_game->_hero->currentRoom());
 }
 
-void MainWindow::presentNewItem(std::shared_ptr<Item> item)
-{
-    ItemCollectedWindow w(this, item);
-    w.show();
+void MainWindow::presentNewItem(std::shared_ptr<Item> item) {
+    ItemCollectedWindow* iw = new ItemCollectedWindow(this, item);
+    iw->setWindowTitle("Оповещение!");
+    iw->show();
 }
 
 void MainWindow::enterRoom(int room) {
@@ -82,28 +93,37 @@ void MainWindow::moveSouth() {
 }
 
 void MainWindow::displayShop() {
+    _shopWindow->setWindowTitle("Магазин");
     _shopWindow->show();
 }
 
 void MainWindow::replaceTeam(std::shared_ptr<ShipBoardingTeam> team) {
-    ui->bp_value->display(team->baseBoardingPower * (100 - _game->_hero->hull()->boardingPowerDecreasement) / 100);
+    ui->bp_value->display(int(team->baseBoardingPower * (100 - _game->_hero->hull()->boardingPowerDecreasement) / 100));
 }
 
 void MainWindow::replaceCannons(std::shared_ptr<ShipCannons> cannons) {
-    ui->atk_value->display(cannons->baseAttack);
-    ui->acc_value->display(cannons->baseAccuracy);
+    ui->atk_value->display(int(cannons->baseAttack));
+    ui->acc_value->display(int(cannons->baseAccuracy));
 }
 
 void MainWindow::replaceHull(std::shared_ptr<ShipHull> hull) {
-    ui->arm_value->display(hull->baseArmor);
-    ui->wc_value->display(hull->baseCarryingCapacity);
+    ui->arm_value->display(int(hull->baseArmor));
+    ui->wc_value->display(int(hull->baseCarryingCapacity));
     updateHeroMaxHealth(_game->_hero->maxHealth());
     updateHeroHealth(_game->_hero->health());
 }
 
 void MainWindow::replaceSail(std::shared_ptr<ShipSail> sail) {
-    ui->ev_value->display(sail->baseEvasion * (100 - _game->_hero->hull()->evasionDecreasement) / 100);
-    ui->esc_value->display(sail->baseEscape * (100 - _game->_hero->hull()->escapeDecreasement) / 100);
+    ui->ev_value->display(int(sail->baseEvasion * (100 - _game->_hero->hull()->evasionDecreasement) / 100));
+    ui->esc_value->display(int(sail->baseEscape * (100 - _game->_hero->hull()->escapeDecreasement) / 100));
+}
+
+void MainWindow::updateStats() {
+    auto hero = _game->_hero;
+    replaceHull(hero->hull());
+    replaceSail(hero->sail());
+    replaceTeam(hero->team());
+    replaceCannons(hero->cannons());
 }
 
 void MainWindow::updateHeroHealth(uint16_t health) {
@@ -114,13 +134,11 @@ void MainWindow::updateHeroMaxHealth(uint16_t health) {
     ui->health_bar->setMaximum(health);
 }
 
-void MainWindow::startEncount(EncounterType /*type*/, std::shared_ptr<Enemy> /*enemy*/)
-{
+void MainWindow::startEncount(EncounterType /*type*/, std::shared_ptr<Enemy> /*enemy*/) {
     this->setDisabled(true);
 }
 
-void MainWindow::encountEnd(std::shared_ptr<Enemy> /*enemy*/, BattleWonResult /*result*/)
-{
+void MainWindow::encountEnd(std::shared_ptr<Enemy> /*enemy*/, BattleWonResult /*result*/) {
     this->setDisabled(false);
 }
 

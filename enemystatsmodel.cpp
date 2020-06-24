@@ -3,8 +3,7 @@
 
 #include <QSize>
 
-void EnemyStatsModel::setEnemy(const std::shared_ptr<Enemy> &enemy)
-{
+void EnemyStatsModel::setEnemy(const std::shared_ptr<Enemy> &enemy) {
     if (enemy != _enemy) {
         QObject::disconnect(&*_enemy, SIGNAL(team_changed(std::shared_ptr<ShipBoardingTeam>)), this, SLOT(replaceTeam(std::shared_ptr<ShipBoardingTeam>)));
         QObject::disconnect(&*_enemy, SIGNAL(cannons_changed(std::shared_ptr<ShipCannons>)), this, SLOT(replaceCannons(std::shared_ptr<ShipCannons>)));
@@ -19,23 +18,19 @@ void EnemyStatsModel::setEnemy(const std::shared_ptr<Enemy> &enemy)
     QObject::connect(&*enemy, SIGNAL(sail_changed(std::shared_ptr<ShipSail>)), this, SLOT(replaceSail(std::shared_ptr<ShipSail>)));
 }
 
-void EnemyStatsModel::replaceTeam(std::shared_ptr<ShipBoardingTeam> /*team*/)
-{
+void EnemyStatsModel::replaceTeam(std::shared_ptr<ShipBoardingTeam> /*team*/) {
     emit dataChanged(createIndex(3,0), createIndex(3,1));
 }
 
-void EnemyStatsModel::replaceCannons(std::shared_ptr<ShipCannons> /*cannons*/)
-{
+void EnemyStatsModel::replaceCannons(std::shared_ptr<ShipCannons> /*cannons*/) {
     emit dataChanged(createIndex(0,0), createIndex(0,1));
 }
 
-void EnemyStatsModel::replaceHull(std::shared_ptr<ShipHull> /*hull*/)
-{
+void EnemyStatsModel::replaceHull(std::shared_ptr<ShipHull> /*hull*/) {
     emit dataChanged(createIndex(1,0), createIndex(1,1));
 }
 
-void EnemyStatsModel::replaceSail(std::shared_ptr<ShipSail> /*sail*/)
-{
+void EnemyStatsModel::replaceSail(std::shared_ptr<ShipSail> /*sail*/) {
     emit dataChanged(createIndex(2,0), createIndex(2,1));
 }
 
@@ -45,8 +40,7 @@ EnemyStatsModel::EnemyStatsModel(QObject *parent, std::shared_ptr<Enemy> enemy, 
     setEnemy(enemy);
 }
 
-QVariant EnemyStatsModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
+QVariant EnemyStatsModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
@@ -58,18 +52,15 @@ QVariant EnemyStatsModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
-int EnemyStatsModel::rowCount(const QModelIndex &/*parent*/) const
-{
+int EnemyStatsModel::rowCount(const QModelIndex &/*parent*/) const {
     return 4;
 }
 
-int EnemyStatsModel::columnCount(const QModelIndex &/*parent*/) const
-{
+int EnemyStatsModel::columnCount(const QModelIndex &/*parent*/) const {
     return 2;
 }
 
-QVariant EnemyStatsModel::data(const QModelIndex &index, int role) const
-{
+QVariant EnemyStatsModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid())
         return QVariant();
 

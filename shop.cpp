@@ -5,8 +5,7 @@ QMap<ItemType, QList<std::shared_ptr<Item> > > Shop::globalShop() const
     return _globalShop;
 }
 
-Shop::Shop(QObject *parent) : QObject(parent)
-{
+Shop::Shop(QObject *parent) : QObject(parent) {
     for (int i = 0; i < int(LAST_ITEM_TYPE); ++i) {
         _globalShop[ItemType(i)] = QList<std::shared_ptr<Item>>();
     }
@@ -58,8 +57,7 @@ void Shop::addItem(std::shared_ptr<Item> item) {
     emit shopChanged(_globalShop);
 }
 
-void Shop::removeItem(std::shared_ptr<Item> item)
-{
+void Shop::removeItem(std::shared_ptr<Item> item) {
     auto& itemGroupInShop = _globalShop[item->getType()];
     if (!itemGroupInShop.contains(item)) {
         std::cerr << "Can't remove item which isn't presented" << std::endl;

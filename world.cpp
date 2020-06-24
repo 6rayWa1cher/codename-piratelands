@@ -35,8 +35,7 @@ Sea::Sea(World* world, int n, int e, int s, int w) :
 
 }
 
-bool Island::firstTimeStep() const
-{
+bool Island::firstTimeStep() const {
     return _firstTimeStep;
 }
 

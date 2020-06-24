@@ -12,3 +12,4 @@ ItemCollectedWindow::ItemCollectedWindow(QWidget *parent, std::shared_ptr<Item> 
 ItemCollectedWindow::~ItemCollectedWindow() {
     delete ui;
 }
+

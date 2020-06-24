@@ -8,10 +8,8 @@ namespace Ui {
 class ItemCollectedWindow;
 }
 
-class ItemCollectedWindow : public QDialog
-{
+class ItemCollectedWindow : public QDialog {
     Q_OBJECT
-
 public:
     ItemCollectedWindow(QWidget *parent = nullptr, std::shared_ptr<Item> item = nullptr);
     ~ItemCollectedWindow();

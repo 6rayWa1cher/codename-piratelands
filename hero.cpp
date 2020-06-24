@@ -2,23 +2,19 @@
 #include "item.h"
 #include <iostream>
 
-QString Enemy::name() const
-{
+QString Enemy::name() const {
     return _name;
 }
 
-uint16_t Enemy::health() const
-{
+uint16_t Enemy::health() const {
     return _health;
 }
 
-uint16_t Enemy::maxHealth() const
-{
+uint16_t Enemy::maxHealth() const {
     return _maxHealth;
 }
 
-uint32_t Enemy::money() const
-{
+uint32_t Enemy::money() const {
     return _money;
 }
 
@@ -34,13 +30,11 @@ std::shared_ptr<ShipSail> Enemy::sail() {
     return _sail;
 }
 
-const QMap<ItemType, QList<std::shared_ptr<Item> > >& Hero::inventory() const
-{
+const QMap<ItemType, QList<std::shared_ptr<Item> > >& Hero::inventory() const {
     return _inventory;
 }
 
-uint16_t Hero::currentRoom() const
-{
+uint16_t Hero::currentRoom() const {
     return _currentRoom;
 }
 
@@ -104,8 +98,7 @@ void Hero::addItem(std::shared_ptr<Item> item) {
     emit inventory_changed(_inventory);
 }
 
-void Hero::removeItem(std::shared_ptr<Item> item)
-{
+void Hero::removeItem(std::shared_ptr<Item> item) {
     auto& itemGroupInShop = _inventory[item->getType()];
     int i = 0;
     for(i = 0; i < itemGroupInShop.size(); i++) {
@@ -136,8 +129,7 @@ bool Hero::changeMoney(int delta) {
     return true;
 }
 
-void Hero::equipTeam(std::shared_ptr<ShipBoardingTeam> team)
-{
+void Hero::equipTeam(std::shared_ptr<ShipBoardingTeam> team) {
     _team = team;
     emit team_changed(team);
 }
@@ -149,7 +141,7 @@ void Hero::equipCannons(std::shared_ptr<ShipCannons> cannons) {
 
 void Hero::equipHull(std::shared_ptr<ShipHull> hull) {
     _hull = hull;
-    _maxHealth = 150 + hull->baseHealth;
+    _maxHealth = hull->baseHealth;
     setHealth(std::min(health(), maxHealth()));
     emit hull_changed(hull);
     emit max_health_changed(_maxHealth);
@@ -161,8 +153,7 @@ void Hero::equipSail(std::shared_ptr<ShipSail> sail) {
     emit sail_changed(sail);
 }
 
-void Hero::resurrect()
-{
+void Hero::resurrect() {
     _health = _maxHealth * 0.8;
     _currentRoom = 15;
     emit health_changed(_health);
