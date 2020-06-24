@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "battlewindow.h"
 #include "enemystatsmodel.h"
+#include "itemcollectedwindow.h"
 #include "game.h"
 #include "shopwindow.h"
 
@@ -22,6 +23,7 @@ public:
 private:
     ShopWindow* _shopWindow;
     BattleWindow* _battleWindow;
+    ItemCollectedWindow* _itemCollectedWindow;
     InventoryItemModel _worldInventoryModel;
     CharacteristicsItemModel _characteristicsInventoryModel;
     EnemyStatsModel _heroStatsModel;
@@ -40,5 +42,12 @@ public slots:
     void updateHeroMaxHealth(uint16_t health);
     void startEncount(EncounterType type, std::shared_ptr<Enemy> enemy);
     void encountEnd(std::shared_ptr<Enemy> enemy, BattleWonResult result);
+    void setHeroName(QString name);
+    void moneyChanged(int money);
+    void replaceTeam(std::shared_ptr<ShipBoardingTeam> team);
+    void replaceCannons(std::shared_ptr<ShipCannons> cannons);
+    void replaceHull(std::shared_ptr<ShipHull> hull);
+    void replaceSail(std::shared_ptr<ShipSail> sail);
+    void updateStats();
 };
 #endif // MAINWINDOW_H

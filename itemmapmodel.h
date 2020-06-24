@@ -62,6 +62,8 @@ public:
     CharacteristicsItemModel(QObject* parent, std::shared_ptr<Game> game);
 public slots:
     void onTableClicked(const QModelIndex& index);
+signals:
+    void stat_changed();
 };
 
 class BattleItemModel : public InventoryItemModel {

@@ -166,7 +166,7 @@
         <x>330</x>
         <y>10</y>
         <width>241</width>
-        <height>551</height>
+        <height>561</height>
        </rect>
       </property>
       <property name="sizeAdjustPolicy">
@@ -238,51 +238,108 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>440</y>
+        <y>350</y>
         <width>281</width>
-        <height>138</height>
+        <height>199</height>
        </rect>
       </property>
-      <layout class="QFormLayout" name="stat_info">
+      <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <widget class="QLabel" name="stat1_label">
+        <widget class="QLabel" name="atk_label">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
-          <string>TextLabel</string>
+          <string>Атака</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLCDNumber" name="stat1_value"/>
+        <widget class="QLCDNumber" name="atk_value"/>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="stat2_label">
+        <widget class="QLabel" name="acc_label">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Точность</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLCDNumber" name="stat2_value"/>
-       </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="stat3_label">
+        <widget class="QLabel" name="bp_label">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Сила команды</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLCDNumber" name="stat3_value"/>
+        <widget class="QLCDNumber" name="bp_value"/>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="stat4_label">
+        <widget class="QLabel" name="arm_label">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Броня</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLCDNumber" name="stat4_value"/>
+        <widget class="QLCDNumber" name="arm_value"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="ev_label">
+         <property name="text">
+          <string>Уклонение</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLCDNumber" name="ev_value"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="esc_label">
+         <property name="text">
+          <string>Скорость</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="wc_label">
+         <property name="text">
+          <string>Грузоподъёмность</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLCDNumber" name="wc_value"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLCDNumber" name="acc_value"/>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLCDNumber" name="esc_value"/>
        </item>
       </layout>
      </widget>
@@ -290,9 +347,9 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>170</y>
+        <y>160</y>
         <width>281</width>
-        <height>261</height>
+        <height>146</height>
        </rect>
       </property>
       <property name="frameShape">

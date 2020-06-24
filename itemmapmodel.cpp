@@ -50,8 +50,7 @@ int ItemMapModel::columnCount(const QModelIndex &/*parent*/) const {
     return _showPrice ? 3 : 2;
 }
 
-QVariant ItemMapModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
+QVariant ItemMapModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
@@ -148,6 +147,7 @@ void CharacteristicsItemModel::onTableClicked(const QModelIndex& index) {
         case ItemType::SHIP_CANNONS:
         case ItemType::SHIP_BOARDING_TEAM:
             std::dynamic_pointer_cast<ShipEquipment>(item)->equip(&*_hero);
+            emit stat_changed();
             break;
         case ItemType::SHIP_CONSUMABLE:
             ret = std::dynamic_pointer_cast<ShipConsumable>(item)->consume(&*_hero);
@@ -167,8 +167,7 @@ BattleItemModel::BattleItemModel(QObject *parent, std::shared_ptr<Game> game) :
 
 }
 
-void BattleItemModel::onTableClicked(const QModelIndex &index)
-{
+void BattleItemModel::onTableClicked(const QModelIndex &index) {
     if (index.isValid()) {
         std::shared_ptr<Item> item = getItemFromIndex(index);
         switch (item->getType()) {

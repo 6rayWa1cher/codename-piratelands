@@ -18,8 +18,7 @@ ItemType KeyItem::getType() const noexcept {
     return ItemType::KEY_ITEM;
 }
 
-std::shared_ptr<Item> KeyItem::changeAmount(int delta) const
-{
+std::shared_ptr<Item> KeyItem::changeAmount(int delta) const {
     switch(delta) {
     case -1:
         return nullptr;
@@ -44,8 +43,7 @@ ItemType ShipConsumable::getType() const noexcept {
     return ItemType::SHIP_CONSUMABLE;
 }
 
-std::shared_ptr<Item> ShipConsumable::changeAmount(int delta) const
-{
+std::shared_ptr<Item> ShipConsumable::changeAmount(int delta) const {
     if (delta < 0 && static_cast<uint32_t>(-delta) >= amount) {
         return nullptr;
     }
@@ -60,8 +58,7 @@ ShipEquipment::ShipEquipment(QString name, QString description, uint32_t price) 
 
 }
 
-std::shared_ptr<Item> ShipEquipment::changeAmount(int delta) const
-{
+std::shared_ptr<Item> ShipEquipment::changeAmount(int delta) const {
     switch(delta) {
     case -1:
         return nullptr;
@@ -78,6 +75,7 @@ ShipCannons::ShipCannons(QString name, QString description, uint8_t baseAttack,
 }
 
 void ShipCannons::equip(Hero* hero) {
+    if(weight > hero->hull()->baseCarryingCapacity) return;   //TODO implement notification window
     auto cannons = hero->cannons();
     if(cannons) hero->addItem(cannons);
     hero->removeItem(std::make_shared<ShipCannons>(*this));
@@ -101,6 +99,7 @@ ShipHull::ShipHull(QString name, QString description, uint32_t baseHealth, uint8
 }
 
 void ShipHull::equip(Hero* hero) {
+    if(baseCarryingCapacity < hero->cannons()->weight) return; // TODO implement notification window
     auto hull = hero->hull();
     if(hull) hero->addItem(hull);
     hero->removeItem(std::make_shared<ShipHull>(*this));
@@ -153,16 +152,14 @@ ShipBoardingTeam::ShipBoardingTeam(QString name, QString description, uint8_t ba
 
 }
 
-void ShipBoardingTeam::equip(Hero *hero)
-{
+void ShipBoardingTeam::equip(Hero *hero) {
     auto team = hero->team();
     if(team) hero->addItem(team);
     hero->removeItem(std::make_shared<ShipBoardingTeam>(*this));
     hero->equipTeam(std::make_shared<ShipBoardingTeam>(*this));
 }
 
-ItemType ShipBoardingTeam::getType() const noexcept
-{
+ItemType ShipBoardingTeam::getType() const noexcept {
     return ItemType::SHIP_BOARDING_TEAM;
 }
 
@@ -239,13 +236,11 @@ std::shared_ptr<ShipConsumable> BuckshotItem::clone() const {
                 );
 }
 
-bool operator==(const Item &i1, const Item &i2)
-{
+bool operator==(const Item &i1, const Item &i2) {
     return i1.name == i2.name &&
             i1.description == i2.description;
 }
 
-bool operator!=(const Item &i1, const Item &i2)
-{
+bool operator!=(const Item &i1, const Item &i2) {
     return !(i1 == i2);
 }

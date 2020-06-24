@@ -9,18 +9,15 @@ Battle::Battle(QObject *parent, Game* game) :
     _gen.seed(time(0));
 }
 
-int Battle::stepNumber() const
-{
+int Battle::stepNumber() const {
     return _stepNumber;
 }
 
-bool Battle::isBattle() const noexcept
-{
+bool Battle::isBattle() const noexcept {
     return _stepNumber != -1;
 }
 
-void Battle::startBattle(std::shared_ptr<Enemy> enemy)
-{
+void Battle::startBattle(std::shared_ptr<Enemy> enemy) {
     _currentEnemy = enemy;
     _stepNumber = 1;
     _heroEffect = nullptr;
@@ -29,8 +26,7 @@ void Battle::startBattle(std::shared_ptr<Enemy> enemy)
     _enemyEffectTurnsLeft = 0;
 }
 
-std::shared_ptr<Enemy> Battle::currentEnemy() const
-{
+std::shared_ptr<Enemy> Battle::currentEnemy() const {
     return _currentEnemy;
 }
 
@@ -102,8 +98,7 @@ int Battle::tryAttack(std::shared_ptr<Enemy> attacker, std::shared_ptr<Enemy> de
     return 1;
 }
 
-int Battle::tryBoarding(std::shared_ptr<Enemy> attacker, std::shared_ptr<Enemy> defender)
-{
+int Battle::tryBoarding(std::shared_ptr<Enemy> attacker, std::shared_ptr<Enemy> defender) {
     emit battleEvent(attacker->name() + " делает попытку взять на абордаж!");
     uint8_t attackerEscape = attacker->sail()->baseEscape * (100 - attacker->hull()->escapeDecreasement) / 100;
     uint8_t p1 = genAndNormalize(0.75 * attackerEscape, attackerEscape);
@@ -130,8 +125,7 @@ int Battle::tryBoarding(std::shared_ptr<Enemy> attacker, std::shared_ptr<Enemy> 
     return 2;
 }
 
-int Battle::tryFlee(std::shared_ptr<Enemy> runner, std::shared_ptr<Enemy> chaser)
-{
+int Battle::tryFlee(std::shared_ptr<Enemy> runner, std::shared_ptr<Enemy> chaser) {
     emit battleEvent(runner->name() + " пытается сбежать!");
     uint8_t attackerEscape = runner->sail()->baseEscape * (100 - runner->hull()->escapeDecreasement) / 100;
     uint8_t p1 = genAndNormalize(0.75 * attackerEscape, attackerEscape);
@@ -147,8 +141,7 @@ int Battle::tryFlee(std::shared_ptr<Enemy> runner, std::shared_ptr<Enemy> chaser
     return 1;
 }
 
-void Battle::heroWon()
-{
+void Battle::heroWon() {
     BattleWonResult bwr;
     _game->_hero->changeMoney(_currentEnemy->money());
     bwr.gold = _currentEnemy->money();
@@ -196,15 +189,13 @@ void Battle::heroWon()
     _currentEnemy = nullptr;
 }
 
-void Battle::heroLost()
-{
+void Battle::heroLost() {
     _game->_hero->resurrect();
     emit battleOver(_currentEnemy, BattleWonResult());
     _currentEnemy = nullptr;
 }
 
-void Battle::enemyTurn()
-{
+void Battle::enemyTurn() {
     if (true) {
         int result = tryAttack(_currentEnemy, _game->_hero);
         switch (result) {
@@ -273,8 +264,7 @@ void Battle::enemyTurn()
     }
 }
 
-void Battle::attack()
-{
+void Battle::attack() {
    int result = tryAttack(_game->_hero, _currentEnemy);
    switch (result) {
    case 0:
@@ -287,8 +277,7 @@ void Battle::attack()
    }
 }
 
-void Battle::boarding()
-{
+void Battle::boarding() {
     int result = tryBoarding(_game->_hero, _currentEnemy);
     switch (result) {
     case 0:
@@ -320,8 +309,7 @@ void Battle::clickItem(std::shared_ptr<Item> item)
     enemyTurn();
 }
 
-void Battle::fleeing()
-{
+void Battle::fleeing() {
     int result = tryFlee(_game->_hero, _currentEnemy);
     switch (result) {
     case 0:

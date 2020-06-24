@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     battle.cpp \
     battleitemeffect.cpp \
+    battlelostwindow.cpp \
     battlewindow.cpp \
     battlewonwindow.cpp \
     enemystatsmodel.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
 HEADERS += \
     battle.h \
     battleitemeffect.h \
+    battlelostwindow.h \
     battlewindow.h \
     battlewonwindow.h \
     enemystatsmodel.h \
@@ -49,6 +51,7 @@ HEADERS += \
     world.h
 
 FORMS += \
+    battlelostwindow.ui \
     battlewindow.ui \
     battlewonwindow.ui \
     itemcollectedwindow.ui \
