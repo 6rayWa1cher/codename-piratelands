@@ -171,19 +171,22 @@ HealingItem::HealingItem(QString name, QString description, uint16_t heal, uint3
 
 }
 
-std::shared_ptr<ShipConsumable> HealingItem::consume(Hero *hero) {
-    uint16_t maxUnitHealth = hero->maxHealth();
-    uint16_t unitHealth = hero->health();
-    if(maxUnitHealth == unitHealth) return this->clone();
+ShipConsumableReturn HealingItem::consume(Enemy *enemy) {
+    uint16_t maxUnitHealth = enemy->maxHealth();
+    uint16_t unitHealth = enemy->health();
+    ShipConsumableReturn returnObj;
+    if(maxUnitHealth == unitHealth)  {
+        returnObj.consumeResult = this->clone();
+        return returnObj;
+    }
 
     uint16_t newHealth = unitHealth + heal;
     auto newItem = this->changeAmount(-1);
     newHealth = std::min(maxUnitHealth, newHealth);
 
-    hero->setHealth(newHealth);
-    hero->removeItem(this->clone());
-    if(newItem) hero->addItem(newItem);
-    return std::dynamic_pointer_cast<ShipConsumable>(newItem);
+    enemy->setHealth(newHealth);
+    returnObj.consumeResult = std::dynamic_pointer_cast<ShipConsumable>(newItem);
+    return returnObj;
 }
 
 std::shared_ptr<ShipConsumable> HealingItem::clone() const {
@@ -197,9 +200,15 @@ BombItem::BombItem(QString name, QString description, uint32_t damage, uint32_t 
 
 }
 
-std::shared_ptr<ShipConsumable> BombItem::consume(Hero *hero) {
-    // TODO add implementation
-    return nullptr;
+ShipConsumableReturn BombItem::consume(Enemy */*enemy*/) {
+    ShipConsumableReturn returnObj;
+    returnObj.consumeResult = std::dynamic_pointer_cast<ShipConsumable>(changeAmount(-1));
+    if (rand() % 2 == 0) {
+        returnObj.makeEffect = std::make_shared<BombItemEffect>();
+        returnObj.effectTurns = 2;
+        returnObj.effectOnOther = true;
+    }
+    return returnObj;
 }
 
 std::shared_ptr<ShipConsumable> BombItem::clone() const {
@@ -213,8 +222,15 @@ BuckshotItem::BuckshotItem(QString name, QString description, uint32_t price, ui
 
 }
 
-std::shared_ptr<ShipConsumable> BuckshotItem::consume(Hero *hero) {
-    // TODO using
+ShipConsumableReturn BuckshotItem::consume(Enemy */*enemy*/) {
+    ShipConsumableReturn returnObj;
+    returnObj.consumeResult = std::dynamic_pointer_cast<ShipConsumable>(changeAmount(-1));
+    if (rand() % 2 == 0) {
+        returnObj.makeEffect = std::make_shared<BuckshotEffect>();
+        returnObj.effectTurns = 2;
+        returnObj.effectOnOther = true;
+    }
+    return returnObj;
 }
 
 std::shared_ptr<ShipConsumable> BuckshotItem::clone() const {

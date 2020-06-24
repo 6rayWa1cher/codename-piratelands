@@ -35,6 +35,7 @@ Game::Game(QString name) {
     _hero->addItem(
                 std::make_shared<ShipHull>("asdzxfgcgvjhi", "Basic3 hull", 303, 0, 1, 0, 1, 0, 0)
                 );
+    _hero->addItem(std::make_shared<BombItem>()->changeAmount(100));
     _hero->addItem(std::make_shared<ShipBoardingTeam>("jipwert", "111fgasdjkpi", 100500, 0));
     _hero->addItem(std::make_shared<ShipBoardingTeam>("hioltu", "opha3rt9054y8p", 23048, 0));
     _hero->addItem(std::make_shared<HealingItem>("Metal list", "Healing your health", 120, 0, 1));

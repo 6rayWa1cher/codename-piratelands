@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <memory>
+#include "battleitemeffect.h"
 #include "hero.h"
 
 class Game;
@@ -50,11 +51,20 @@ public:
     ShipItem(QString name, QString description, uint32_t price = 0, uint32_t amount = 1);
 };
 
+class ShipConsumable;
+
+struct ShipConsumableReturn {
+    std::shared_ptr<ShipConsumable> consumeResult = nullptr;
+    std::shared_ptr<BattleItemEffect> makeEffect = nullptr;
+    bool effectOnOther = false;
+    int8_t effectTurns = -1;
+};
+
 class ShipConsumable : public ShipItem {
 public:
     ShipConsumable(QString name, QString description, uint32_t price = 0,
                    uint32_t amount = 1);
-    virtual std::shared_ptr<ShipConsumable> consume(Hero* hero) = 0;
+    virtual ShipConsumableReturn consume(Enemy* hero) = 0;
     ItemType getType() const noexcept override;
     std::shared_ptr<Item> changeAmount(int delta) const override;
     virtual std::shared_ptr<ShipConsumable> clone() const = 0;
@@ -126,7 +136,7 @@ public:
     const uint16_t heal;
     HealingItem(QString name, QString description, uint16_t heal, uint32_t price = 0,
                 uint32_t amount = 1);
-    std::shared_ptr<ShipConsumable> consume(Hero *hero) override;
+    ShipConsumableReturn consume(Enemy *enemy) override;
     std::shared_ptr<ShipConsumable> clone() const override;
 };
 
@@ -135,7 +145,7 @@ public:
     const uint32_t damage;
     BombItem(QString name = "Bomb", QString description = "With a 50% chance, deals damage per turn to the enemy for two turns", uint32_t damage = 40, uint32_t price = 500,
          uint32_t amount = 1);
-    std::shared_ptr<ShipConsumable> consume(Hero *hero) override;
+    ShipConsumableReturn consume(Enemy *enemy) override;
     std::shared_ptr<ShipConsumable> clone() const override;
 };
 
@@ -143,7 +153,7 @@ class BuckshotItem : public ShipConsumable {
 public:
     BuckshotItem(QString name = "Buckshot", QString description = "With a 50% chance reduces the boarding power of the enemy team by 50%", uint32_t price = 500,
                  uint32_t amount = 1);
-    std::shared_ptr<ShipConsumable> consume(Hero *hero) override;
+    ShipConsumableReturn consume(Enemy *enemy) override;
     std::shared_ptr<ShipConsumable> clone() const override;
 };
 
