@@ -124,7 +124,10 @@ void BattleWindow::battleIsOver(std::shared_ptr<Enemy> enemy, BattleWonResult re
         setDisabled(true);
         _bww.show(result);
     } else {
-        _blw.show();
+        // escape?
+        if (_game->_hero->currentRoom() == 15) {
+            _blw.show();
+        }
         fullEndBattle();
     }
 }
