@@ -3,6 +3,7 @@
 #include <algorithm>
 
 Game::Game(QString name) {
+    if(name.isEmpty()) name = "Долговязый Джонни";
     _world = std::make_shared<World>(nullptr);
     _hero = std::make_shared<Hero>(name, _world);
     _shop = std::make_shared<Shop>(this);

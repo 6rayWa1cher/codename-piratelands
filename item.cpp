@@ -78,6 +78,7 @@ ShipCannons::ShipCannons(QString name, QString description, uint8_t baseAttack,
 }
 
 void ShipCannons::equip(Hero* hero) {
+    if(weight > hero->hull()->baseCarryingCapacity) return;   //TODO implement notification window
     auto cannons = hero->cannons();
     if(cannons) hero->addItem(cannons);
     hero->removeItem(std::make_shared<ShipCannons>(*this));
@@ -101,6 +102,7 @@ ShipHull::ShipHull(QString name, QString description, uint32_t baseHealth, uint8
 }
 
 void ShipHull::equip(Hero* hero) {
+    if(baseCarryingCapacity < hero->cannons()->weight) return; // TODO implement notification window
     auto hull = hero->hull();
     if(hull) hero->addItem(hull);
     hero->removeItem(std::make_shared<ShipHull>(*this));

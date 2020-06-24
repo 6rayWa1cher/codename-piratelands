@@ -11,6 +11,8 @@ int main(int argc, char *argv[])
     ShopWindow s(nullptr, game);
     BattleWindow bw(nullptr, game);
     MainWindow w(nullptr, &s, game);
+    s.setFixedSize(s.size());
+    bw.setFixedSize(bw.size());
     w.setFixedSize(w.size());
     w.show();
     return a.exec();

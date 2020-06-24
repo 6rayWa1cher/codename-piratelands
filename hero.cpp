@@ -63,7 +63,7 @@ Enemy::Enemy(QString name, std::shared_ptr<World> world, uint16_t health, uint32
 }
 
 Hero::Hero(QString name, std::shared_ptr<World> world) :
-    Enemy(name, world, 150, 5,
+    Enemy(name, world, 150, 0,
           std::make_shared<ShipBoardingTeam>("Корабельные крысы", "Бухие оборванцы", 20, 50),
           std::make_shared<ShipCannons>("12-фунтовые пушки", "Обычные пушки, подойдут для любой задачи", 60, 50, 2, 400),
           std::make_shared<ShipHull>("Полу-бронированный корпус", "Корпус-универсал", 150, 35, 53, 28, 2, 50, 1000),
@@ -74,6 +74,11 @@ Hero::Hero(QString name, std::shared_ptr<World> world) :
     for (int i = 0; i < int(LAST_ITEM_TYPE); ++i) {
         _inventory[ItemType(i)] = QList<std::shared_ptr<Item>>();
     }
+    equipHull(_hull);
+    equipSail(_sail);
+    equipTeam(_team);
+    equipCannons(_cannons);
+    setHealth(_maxHealth);
 }
 
 void Hero::move(Direction dir) {

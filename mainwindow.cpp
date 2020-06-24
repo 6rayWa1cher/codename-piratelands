@@ -32,10 +32,12 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     connect(&(*game->_hero), SIGNAL(max_health_changed(uint16_t)), this, SLOT(updateHeroMaxHealth(uint16_t)));
     connect(&(*game->_battle), SIGNAL(battleOver(std::shared_ptr<Enemy>, BattleWonResult)), this, SLOT(encountEnd(std::shared_ptr<Enemy>, BattleWonResult)));
     connect(&(*game->_world), SIGNAL(encounter(EncounterType, std::shared_ptr<Enemy>)), this, SLOT(startEncount(EncounterType, std::shared_ptr<Enemy>)));
+    QObject::connect(&*game->_hero, SIGNAL(money_changed(int)), this, SLOT(moneyChanged(int)));
     replaceHull(game->_hero->hull());
     replaceSail(game->_hero->sail());
     replaceTeam(game->_hero->team());
     replaceCannons(game->_hero->cannons());
+    setHeroName(game->_hero->name());
 }
 
 MainWindow::~MainWindow() {
@@ -84,34 +86,41 @@ void MainWindow::displayShop() {
     _shopWindow->show();
 }
 
-void MainWindow::replaceTeam(std::shared_ptr<ShipBoardingTeam> team)
-{
+void MainWindow::replaceTeam(std::shared_ptr<ShipBoardingTeam> team) {
     ui->team_name->setText(team->name);
     ui->team_name->setToolTip(team->description);
+    ui->bp_value->display(team->baseBoardingPower * (100 - _game->_hero->hull()->boardingPowerDecreasement) / 100);
 }
 
 void MainWindow::replaceCannons(std::shared_ptr<ShipCannons> cannons) {
     ui->equipped_melee_weapon_name->setText(cannons->name);
     ui->equipped_melee_weapon_name->setToolTip(cannons->description);
+    ui->atk_value->display(cannons->baseAttack);
+    ui->acc_value->display(cannons->baseAccuracy);
 }
 
 void MainWindow::replaceHull(std::shared_ptr<ShipHull> hull) {
     ui->equipped_range_weapon_name->setText(hull->name);
     ui->equipped_range_weapon_name->setToolTip(hull->description);
+    ui->arm_value->display(hull->baseArmor);
+    ui->wc_value->display(hull->baseCarryingCapacity);
+    updateHeroMaxHealth(_game->_hero->maxHealth());
+    updateHeroHealth(_game->_hero->health());
 }
 
 void MainWindow::replaceSail(std::shared_ptr<ShipSail> sail) {
     ui->equipped_armor_name->setText(sail->name);
     ui->equipped_armor_name->setToolTip(sail->description);
+    ui->ev_value->display(sail->baseEvasion * (100 - _game->_hero->hull()->evasionDecreasement) / 100);
+    ui->esc_value->display(sail->baseEscape * (100 - _game->_hero->hull()->escapeDecreasement) / 100);
 }
 
 void MainWindow::updateHeroHealth(uint16_t health) {
-    ui->health_bar->setValue(int(health));
+    ui->health_bar->setValue(health);
 }
 
 void MainWindow::updateHeroMaxHealth(uint16_t health) {
     ui->health_bar->setMaximum(health);
-
 }
 
 void MainWindow::startEncount(EncounterType /*type*/, std::shared_ptr<Enemy> /*enemy*/)
@@ -124,3 +133,10 @@ void MainWindow::encountEnd(std::shared_ptr<Enemy> /*enemy*/, BattleWonResult /*
     this->setDisabled(false);
 }
 
+void MainWindow::setHeroName(QString name) {
+    ui->captain_label->setText("Капитан " + name);
+}
+
+void MainWindow::moneyChanged(int money) {
+    ui->money_display->display(money);
+}

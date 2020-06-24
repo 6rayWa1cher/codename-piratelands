@@ -42,5 +42,7 @@ public slots:
     void updateHeroMaxHealth(uint16_t health);
     void startEncount(EncounterType type, std::shared_ptr<Enemy> enemy);
     void encountEnd(std::shared_ptr<Enemy> enemy, BattleWonResult result);
+    void setHeroName(QString name);
+    void moneyChanged(int money);
 };
 #endif // MAINWINDOW_H

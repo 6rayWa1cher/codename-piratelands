@@ -166,7 +166,7 @@
         <x>330</x>
         <y>10</y>
         <width>241</width>
-        <height>551</height>
+        <height>561</height>
        </rect>
       </property>
      </widget>
@@ -235,51 +235,108 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>440</y>
+        <y>377</y>
         <width>281</width>
-        <height>138</height>
+        <height>199</height>
        </rect>
       </property>
-      <layout class="QFormLayout" name="stat_info">
+      <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <widget class="QLabel" name="stat1_label">
+        <widget class="QLabel" name="atk_label">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
-          <string>TextLabel</string>
+          <string>Атака</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLCDNumber" name="stat1_value"/>
+        <widget class="QLCDNumber" name="atk_value"/>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="stat2_label">
+        <widget class="QLabel" name="acc_label">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Точность</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLCDNumber" name="stat2_value"/>
-       </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="stat3_label">
+        <widget class="QLabel" name="bp_label">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Сила команды</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLCDNumber" name="stat3_value"/>
+        <widget class="QLCDNumber" name="bp_value"/>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="stat4_label">
+        <widget class="QLabel" name="arm_label">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Броня</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLCDNumber" name="stat4_value"/>
+        <widget class="QLCDNumber" name="arm_value"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="ev_label">
+         <property name="text">
+          <string>Уклонение</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLCDNumber" name="ev_value"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="esc_label">
+         <property name="text">
+          <string>Скорость</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="wc_label">
+         <property name="text">
+          <string>Грузоподъёмность</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLCDNumber" name="wc_value"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLCDNumber" name="acc_value"/>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLCDNumber" name="esc_value"/>
        </item>
       </layout>
      </widget>
@@ -289,10 +346,10 @@
         <x>20</x>
         <y>154</y>
         <width>281</width>
-        <height>271</height>
+        <height>211</height>
        </rect>
       </property>
-      <layout class="QFormLayout" name="equipped_items">
+      <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="melee_weapon_image">
          <property name="minimumSize">
@@ -314,7 +371,7 @@
           <bool>false</bool>
          </property>
          <property name="alignment">
-          <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
          </property>
         </widget>
        </item>
@@ -323,32 +380,8 @@
          <property name="text">
           <string>TextLabel</string>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="equipped_range_weapon_name">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="armor_image">
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>53</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="equipped_armor_name">
-         <property name="text">
-          <string>TextLabel</string>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -369,11 +402,50 @@
          <property name="text">
           <string/>
          </property>
-         <property name="pixmap">
-          <pixmap>resources/range_weapon_image.png</pixmap>
-         </property>
          <property name="scaledContents">
           <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="indent">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="equipped_range_weapon_name">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="armor_image">
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>53</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="equipped_armor_name">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -382,12 +454,18 @@
          <property name="text">
           <string>TextLabel</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
         </widget>
        </item>
        <item row="3" column="1">
         <widget class="QLabel" name="team_name">
          <property name="text">
           <string>TextLabel</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
