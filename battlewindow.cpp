@@ -9,11 +9,17 @@ BattleWindow::BattleWindow(QWidget *parent, std::shared_ptr<Game> game) :
     _game(game),
     _bww(this),
     _model(this, game),
+    _heroStatsModel(this, game->_hero),
+    _enemyStatsModel(this, game->_hero),
     ui(new Ui::BattleWindow)
 {
     ui->setupUi(this);
     ui->inventory->setModel(&_model);
-    connect(ui->inventory, SIGNAL(doubleClicked(const QModelIndex &)), &_model, SLOT(onTableClicked(const QModelIndex &)));
+    ui->hero_slots->setModel(&_heroStatsModel);
+    ui->enemy_slots->setModel(&_enemyStatsModel);
+    ui->hero_slots->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    ui->enemy_slots->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    QObject::connect(ui->inventory, SIGNAL(doubleClicked(const QModelIndex &)), &_model, SLOT(onTableClicked(const QModelIndex &)));
     QObject::connect(&*game->_world, SIGNAL(encounter(EncounterType, std::shared_ptr<Enemy>)),
                      this, SLOT(startEncount(EncounterType, std::shared_ptr<Enemy>)));
     QObject::connect(&*game->_battle, SIGNAL(battleEvent(QString)), this, SLOT(addToLog(QString)));
@@ -70,6 +76,7 @@ void BattleWindow::startEncount(EncounterType /*type*/, std::shared_ptr<Enemy> e
     QObject::connect(&*enemy, SIGNAL(health_changed(uint16_t)), this, SLOT(enemyHealthChanged(uint16_t)));
     _game->_battle->startBattle(enemy);
     ui->log->setText("");
+    _enemyStatsModel.setEnemy(enemy);
     updateUi();
     this->show();
 }
@@ -78,6 +85,7 @@ void BattleWindow::battleIsOver(std::shared_ptr<Enemy> enemy, BattleWonResult re
 {
     QObject::disconnect(&*enemy, SIGNAL(health_changed(uint16_t)), this, SLOT(enemyHealthChanged(uint16_t)));
 //    this->hide();
+    _enemyStatsModel.setEnemy(_game->_hero);
     if (result.gold > 0){
         setDisabled(true);
         _bww.show(result);

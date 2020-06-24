@@ -93,6 +93,9 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QTableView" name="enemy_slots"/>
+        </item>
        </layout>
       </item>
      </layout>
@@ -120,6 +123,9 @@
            <string>%v/%m</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="hero_slots"/>
         </item>
        </layout>
       </item>
