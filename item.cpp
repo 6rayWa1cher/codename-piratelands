@@ -103,7 +103,6 @@ void ShipHull::equip(Hero* hero) {
     if(hull) hero->addItem(hull);
     hero->removeItem(std::make_shared<ShipHull>(*this));
     hero->equipHull(std::make_shared<ShipHull>(*this));
-
 }
 
 ItemType ShipHull::getType() const noexcept {

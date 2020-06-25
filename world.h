@@ -41,11 +41,6 @@ public:
     virtual bool isShopAvailable();
 };
 
-class Sea : public Room {
-public:
-    Sea(World* world, int n, int e, int s, int w);
-};
-
 class Island : public Room {
 private:
     std::function<void(Island (*), std::shared_ptr<Hero>)> _heroStepped;
@@ -61,6 +56,13 @@ public:
     virtual void successfulEncount(std::shared_ptr<Hero> hero) override;
     virtual bool isShopAvailable() override;
     bool firstTimeStep() const;
+};
+
+class Sea : public Island {
+public:
+    Sea(World* world, int n, int e, int s, int w);
+    Sea(World* world, int n, int e, int s, int w, std::function<void(Island (*), std::shared_ptr<Hero>)> heroStepped,
+                                                  std::function<void(Island (*), std::shared_ptr<Hero>)> successfulEncount);
 };
 
 class E1Island : public Room {

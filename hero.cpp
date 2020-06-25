@@ -58,10 +58,10 @@ Enemy::Enemy(QString name, std::shared_ptr<World> world, uint16_t health, uint32
 
 Hero::Hero(QString name, std::shared_ptr<World> world) :
     Enemy(name, world, 150, 0,
-          std::make_shared<ShipBoardingTeam>("Корабельные крысы", "Бухие оборванцы", 20, 50),
-          std::make_shared<ShipCannons>("12-фунтовые пушки", "Обычные пушки, подойдут для любой задачи", 60, 50, 2, 400),
-          std::make_shared<ShipHull>("Полу-бронированный корпус", "Корпус-универсал", 150, 35, 53, 28, 2, 50, 1000),
-          std::make_shared<ShipSail>("2-х мачтовый", "Стандартные паруса", 41, 35, 50)
+          std::dynamic_pointer_cast<ShipBoardingTeam>(items[10]),
+          std::dynamic_pointer_cast<ShipCannons>(items[8]),
+          std::dynamic_pointer_cast<ShipHull>(items[14]),
+          std::dynamic_pointer_cast<ShipSail>(items[16])
           )
 {
     _currentRoom = 15;
@@ -82,7 +82,7 @@ void Hero::move(Direction dir) {
 
 void Hero::addItem(std::shared_ptr<Item> item) {
     auto& itemGroupInShop = _inventory[item->getType()];
-    int i = 0;
+    int i;
     for(i = 0; i < itemGroupInShop.size(); i++) {
         if(itemGroupInShop[i]->name == item->name &&
            itemGroupInShop[i]->description == item->description &&
@@ -91,9 +91,19 @@ void Hero::addItem(std::shared_ptr<Item> item) {
     if (i == itemGroupInShop.size()) {
         itemGroupInShop.push_back(item);
     } else {
-        auto newItem = item->changeAmount(itemGroupInShop[i]->amount);
-        this->removeItem(itemGroupInShop[i]);
-        itemGroupInShop.append(newItem);
+        if(item->getType() == ItemType::SHIP_CONSUMABLE) {
+            auto newItem = item->changeAmount(itemGroupInShop[i]->amount);
+            this->removeItem(itemGroupInShop[i]);
+            itemGroupInShop.append(newItem);
+        }
+        else {
+            size_t j;
+            for(j = 3; j < items.size(); j++) {
+                if(items[j]->name == item->name) break;
+            }
+            auto newItem = items[j];
+            itemGroupInShop.append(newItem);
+        }
     }
     emit inventory_changed(_inventory);
 }

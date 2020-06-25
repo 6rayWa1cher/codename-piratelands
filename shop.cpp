@@ -1,7 +1,6 @@
 #include "shop.h"
 #include <iostream>
-QMap<ItemType, QList<std::shared_ptr<Item> > > Shop::globalShop() const
-{
+QMap<ItemType, QList<std::shared_ptr<Item> > > Shop::globalShop() const {
     return _globalShop;
 }
 
