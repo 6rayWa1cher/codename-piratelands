@@ -3,8 +3,13 @@
 #include "item.h"
 
 
-Room::Room(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w)
-    : _name(roomName), _description(roomDescr), _world(world) {
+const QPixmap& Room::picture() const
+{
+    return _picture;
+}
+
+Room::Room(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w, QPixmap picture)
+    : _name(roomName), _description(roomDescr), _world(world), _picture(picture) {
     _neighbourRooms[Direction::North] = n;
     _neighbourRooms[Direction::East] = e;
     _neighbourRooms[Direction::South] = s;
@@ -31,28 +36,28 @@ bool Room::isShopAvailable() {
 }
 
 Sea::Sea(World* world, int n, int e, int s, int w) :
-    Island(world, "Море", "Вы на корабле где-то посреди моря", n, e, s, w) {
+    Island(world, "Море", "Вы на корабле где-то посреди моря", n, e, s, w, QPixmap(":/resources/sea.png")) {
 
 }
 
 Sea::Sea(World *world, int n, int e, int s, int w, std::function<void (Island *, std::shared_ptr<Hero>)> heroStepped, std::function<void (Island *, std::shared_ptr<Hero>)> successfulEncount)
-    : Island(world, "Море", "Вы на корабле где-то посреди моря", n, e, s, w, heroStepped, successfulEncount) {
+    : Island(world, "Море", "Вы на корабле где-то посреди моря", n, e, s, w, QPixmap(":/resources/sea.png"), heroStepped, successfulEncount) {
 }
 
 bool Island::firstTimeStep() const {
     return _firstTimeStep;
 }
 
-Island::Island(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w) :
-    Room(world, roomName, roomDescr, n, e, s, w), _heroStepped([](Island*, std::shared_ptr<Hero>){}),
+Island::Island(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w, QPixmap picture) :
+    Room(world, roomName, roomDescr, n, e, s, w, picture), _heroStepped([](Island*, std::shared_ptr<Hero>){}),
 _successfulEncount([](Island*, std::shared_ptr<Hero>){}) {
 
 }
 
-Island::Island(World *world, QString roomName, QString roomDescr, int n, int e, int s, int w,
+Island::Island(World *world, QString roomName, QString roomDescr, int n, int e, int s, int w, QPixmap picture,
                std::function<void (Island *, std::shared_ptr<Hero>)> heroStepped,
                std::function<void (Island *, std::shared_ptr<Hero>)> successfulEncount) :
-    Room(world, roomName, roomDescr, n, e, s, w), _heroStepped(heroStepped), _successfulEncount(successfulEncount)
+    Room(world, roomName, roomDescr, n, e, s, w, picture), _heroStepped(heroStepped), _successfulEncount(successfulEncount)
 {
 
 }
@@ -71,7 +76,7 @@ bool Island::isShopAvailable() {
     return true;
 }
 
-E1Island::E1Island(World* world, int n, int e, int s, int w) : Room(world, "", "", n, e, s, w) {
+E1Island::E1Island(World* world, int n, int e, int s, int w) : Room(world, "", "", n, e, s, w, QPixmap(":/resources/fogE1.png")) {
     updateInfo();
 }
 
@@ -121,6 +126,13 @@ void E1Island::updateInfo() {
         _description = "За вами следовал линейный корабль!";
     } else {
         _description = "Вы на корабле где-то посреди моря. Повсюду туман.";
+    }
+    if (_isMapCollected && _isOver) {
+        _picture = QPixmap(":/resources/treasure.png");
+    } else if (_isMapCollected) {
+        _picture = QPixmap(":/resources/islandE1.png");
+    } else {
+        _picture = QPixmap(":/resources/fogE1.png");
     }
     _world->sendWorldChanged();
 }
@@ -341,7 +353,7 @@ void World::init() {
                },
                [](Island*, std::shared_ptr<Hero>) {}
     )); // A2
-    _rooms.append(std::make_shared<Island>(this, "Остров Куба, Испания", "Лучший ром на всем архипелаге!", 1, 8, 13, 6,
+    _rooms.append(std::make_shared<Island>(this, "Остров Куба, Испания", "Лучший ром на всем архипелаге!", 1, 8, 13, 6, QPixmap(":/resources/island2.png"),
                                            [](Island* island, std::shared_ptr<Hero> hero) {
                       if (island->firstTimeStep()) {
                           island->_world->grantItem(hero, std::dynamic_pointer_cast<MapPiece>(items[0]));
@@ -478,7 +490,7 @@ void World::init() {
     )); // C3
     _rooms.append(std::make_shared<Island>(this, "Остров Невис, Англия",
                                            "Здесь началось ваше приключение в поисках легендарного клада Чёрной бороды...",
-                                           9, 16, 21, 14)); // D3
+                                           9, 16, 21, 14, QPixmap(":/resources/island1.png"))); // D3
     _rooms.append(std::make_shared<Sea>(this, 10, 17, 22, 15,
                                         [](Island* island, std::shared_ptr<Hero> /*hero*/) {
                       srand(time(0));
@@ -522,7 +534,7 @@ void World::init() {
     )); // F3
     _rooms.append(std::make_shared<Island>(
                       this, "Остров Ямайка, Англия", "Один из мощнейших фортов Карибского моря",
-                      12, 19, 0, 23,
+                      12, 19, 0, 23, QPixmap(":/resources/island4.png"),
                       [](Island* island, std::shared_ptr<Hero> hero) {
                         if (island->firstTimeStep()) {
                             island->_world->grantItem(hero, std::dynamic_pointer_cast<MapPiece>(items[1]));
@@ -608,7 +620,7 @@ void World::init() {
                },
                [](Island*, std::shared_ptr<Hero>) {}
     )); // D4
-    _rooms.append(std::make_shared<Island>(this, "Остров Кюрасао, Голландия", "Отдаленный тихий уголок", 16, 23, 4, 21,
+    _rooms.append(std::make_shared<Island>(this, "Остров Кюрасао, Голландия", "Отдаленный тихий уголок", 16, 23, 4, 21, QPixmap(":/resources/island3.png"),
                                            [](Island* island, std::shared_ptr<Hero> /*hero*/) {
                       if (island->firstTimeStep()) {
                           island->_world->sendEncounter(EncounterType::LAND, std::make_shared<Enemy> (

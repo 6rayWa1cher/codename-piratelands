@@ -3,6 +3,7 @@
 
 #include <QMap>
 #include <QObject>
+#include <QPixmap>
 #include <memory>
 
 class Enemy;
@@ -28,17 +29,19 @@ class Room {
 protected:
     QString _name;
     QString _description;
+    QPixmap _picture;
 public:
     QMap<Direction, int> _neighbourRooms;
     World* _world;
 
-    Room(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w);
+    Room(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w, QPixmap picture);
 
     virtual void heroStepped(std::shared_ptr<Hero> hero);
     virtual void successfulEncount(std::shared_ptr<Hero> hero);
     QString name() const;
     QString description() const;
     virtual bool isShopAvailable();
+    const QPixmap& picture() const;
 };
 
 class Island : public Room {
@@ -48,9 +51,9 @@ private:
     bool _firstTimeStep = true;
 public:
     bool isCleared;
-    Island(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w);
+    Island(World* world, QString roomName, QString roomDescr, int n, int e, int s, int w, QPixmap picture);
     Island(World* world, QString roomName, QString roomDescr,
-           int n, int e, int s, int w, std::function<void(Island (*), std::shared_ptr<Hero>)> heroStepped,
+           int n, int e, int s, int w, QPixmap picture, std::function<void(Island (*), std::shared_ptr<Hero>)> heroStepped,
            std::function<void(Island (*), std::shared_ptr<Hero>)> successfulEncount);
     virtual void heroStepped(std::shared_ptr<Hero> hero) override;
     virtual void successfulEncount(std::shared_ptr<Hero> hero) override;

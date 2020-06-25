@@ -146,40 +146,30 @@ void Battle::heroWon() {
     _game->_hero->changeMoney(_currentEnemy->money());
     bwr.gold = _currentEnemy->money();
     uint8_t p1 = genAndNormalize(70, 100);
-    if (p1 >= 75) {
+    if (true) {
         uint8_t t = std::uniform_int_distribution<>((int) ItemType::SHIP_BOARDING_TEAM, (int) ItemType::SHIP_SAIL)(_gen);
         std::shared_ptr<Item> item;
-        bool equals = false;
         switch (t) {
         case (int) ItemType::SHIP_BOARDING_TEAM:
             item = _currentEnemy->team();
-            equals = *_game->_hero->team() == *item;
             break;
         case (int) ItemType::SHIP_CANNONS:
             item = _currentEnemy->cannons();
-            equals = *_game->_hero->cannons() == *item;
             break;
         case (int) ItemType::SHIP_HULL:
             item = _currentEnemy->hull();
-            equals = *_game->_hero->hull() == *item;
             break;
         case (int) ItemType::SHIP_SAIL:
             item = _currentEnemy->sail();
-            equals = *_game->_hero->sail() == *item;
             break;
         default:
             item = nullptr;
         }
         bwr.item = item;
-        if (!equals) {
-            try {
-                _game->_hero->addItem(item);
-                bwr.selled = false;
-            } catch (UniqueItemException e) {
-                equals = true;
-            }
-        }
-        if (equals) {
+        try {
+            _game->_hero->addItem(item);
+            bwr.selled = false;
+        } catch (UniqueItemException e) {
             _game->_hero->changeMoney(item->price);
             bwr.selled = true;
         }

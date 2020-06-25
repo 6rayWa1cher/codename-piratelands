@@ -16,7 +16,13 @@ bool Shop::shopToHeroTrade(std::shared_ptr<Hero> hero, std::shared_ptr<Item> ite
         throw new std::exception();
     }
     if (hero->changeMoney(-static_cast<int64_t>(item->price))) {
-        hero->addItem(item);
+        try {
+            hero->addItem(item);
+        } catch(UniqueItemException e) {
+            hero->changeMoney(static_cast<int64_t>(item->price));
+            return false;
+        }
+
         this->removeItem(item);
         return true;
     }

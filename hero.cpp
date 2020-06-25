@@ -83,6 +83,26 @@ void Hero::move(Direction dir) {
 void Hero::addItem(std::shared_ptr<Item> item) {
     auto& itemGroupInShop = _inventory[item->getType()];
     int i;
+    bool equals = false;
+    switch (int(item->getType())) {
+    case (int) ItemType::SHIP_BOARDING_TEAM:
+        equals = *_team == *item;
+        break;
+    case (int) ItemType::SHIP_CANNONS:
+        equals = *_cannons == *item;
+        break;
+    case (int) ItemType::SHIP_HULL:
+        equals = *_hull == *item;
+        break;
+    case (int) ItemType::SHIP_SAIL:
+        equals = *_sail == *item;
+        break;
+    default:
+        equals = false;
+    }
+    if (equals) {
+        throw UniqueItemException();
+    }
     for(i = 0; i < itemGroupInShop.size(); i++) {
         if(itemGroupInShop[i]->name == item->name &&
            itemGroupInShop[i]->description == item->description &&
@@ -97,12 +117,13 @@ void Hero::addItem(std::shared_ptr<Item> item) {
             itemGroupInShop.append(newItem);
         }
         else {
-            size_t j;
-            for(j = 3; j < items.size(); j++) {
-                if(items[j]->name == item->name) break;
-            }
-            auto newItem = items[j];
-            itemGroupInShop.append(newItem);
+//            size_t j;
+//            for(j = 3; j < items.size(); j++) {
+//                if(items[j]->name == item->name) break;
+//            }
+//            auto newItem = items[j];
+//            itemGroupInShop.append(newItem);
+            throw UniqueItemException();
         }
     }
     emit inventory_changed(_inventory);

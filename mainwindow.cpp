@@ -5,9 +5,11 @@
 #include <iostream>
 
 
-MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<Game> game)
+MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, MapWindow* mapWindow, CopyrightWindow* copyrightWindow, std::shared_ptr<Game> game)
     : QMainWindow(parent)
     , _shopWindow(shopWindow)
+    , _mapWindow(mapWindow)
+    , _copyrightWindow(copyrightWindow)
     , _worldInventoryModel(this, game, {ItemType::KEY_ITEM}, false)
     , _characteristicsInventoryModel(this, game)
     , _heroStatsModel(this, game->_hero)
@@ -29,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     ui->inventory->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     ui->inventory->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     ui->acc_value->setSegmentStyle(QLCDNumber::SegmentStyle::Filled);
+    ui->zone_image->setScene(&_scene);
+    ui->map_button->setDisabled(true);
     connect(ui->characteristics_inventorty_view, SIGNAL(doubleClicked(const QModelIndex &)), &_characteristicsInventoryModel, SLOT(onTableClicked(const QModelIndex &)));
     connect(&(*game->_hero), SIGNAL(hero_moved(int)), this, SLOT(enterRoom(int)));
     connect(ui->north, SIGNAL(clicked()), this, SLOT(moveNorth()));
@@ -38,10 +42,13 @@ MainWindow::MainWindow(QWidget *parent, ShopWindow* shopWindow, std::shared_ptr<
     connect(ui->shop_button, SIGNAL(clicked()), this, SLOT(displayShop()));
     connect(&(*game->_world), SIGNAL(worldChanged()), this, SLOT(rerenderCurrentRoom()));
     connect(&(*game->_hero), SIGNAL(health_changed(uint16_t)), this, SLOT(updateHeroHealth(uint16_t)));
+    connect(&(*game->_hero), SIGNAL(inventory_changed(const QMap<ItemType, QList<std::shared_ptr<Item> > > &)), this, SLOT(heroInventoryChanged(const QMap<ItemType, QList<std::shared_ptr<Item> > > &)));
     connect(&(*game->_hero), SIGNAL(max_health_changed(uint16_t)), this, SLOT(updateHeroMaxHealth(uint16_t)));
     connect(&(*game->_battle), SIGNAL(battleOver(std::shared_ptr<Enemy>, BattleWonResult)), this, SLOT(encountEnd(std::shared_ptr<Enemy>, BattleWonResult)));
     connect(&(*game->_world), SIGNAL(encounter(EncounterType, std::shared_ptr<Enemy>)), this, SLOT(startEncount(EncounterType, std::shared_ptr<Enemy>)));
     connect(&_characteristicsInventoryModel, SIGNAL(stat_changed()), this, SLOT(updateStats()));
+    connect(ui->map_button, SIGNAL(clicked()), _mapWindow, SLOT(show()));
+    connect(ui->copyright_action, SIGNAL(triggered(bool)), _copyrightWindow, SLOT(show()));
     QObject::connect(&*game->_hero, SIGNAL(money_changed(int)), this, SLOT(moneyChanged(int)));
     connect(&(*(game->_world)), SIGNAL(loudAddItem(std::shared_ptr<Item>)), this, SLOT(presentNewItem(std::shared_ptr<Item>)));
     replaceHull(game->_hero->hull());
@@ -68,6 +75,8 @@ void MainWindow::presentNewItem(std::shared_ptr<Item> item) {
 void MainWindow::enterRoom(int room) {
     auto _room = (*(*_game)._world)[room];
     ui->zone_description->setText(_room->name() + "\n\n" + _room->description());
+    _scene.clear();
+    _scene.addPixmap(_room->picture());
     ui->shop_button->setEnabled(_room->isShopAvailable());
     auto map = _room->_neighbourRooms;
     ui->north->setEnabled(map[Direction::North] != -1);
@@ -140,6 +149,18 @@ void MainWindow::startEncount(EncounterType /*type*/, std::shared_ptr<Enemy> /*e
 
 void MainWindow::encountEnd(std::shared_ptr<Enemy> /*enemy*/, BattleWonResult /*result*/) {
     this->setDisabled(false);
+}
+
+void MainWindow::heroInventoryChanged(const QMap<ItemType, QList<std::shared_ptr<Item> > > &inventory)
+{
+    for(const auto& i: inventory[ItemType::KEY_ITEM]) {
+        if (i->name == items[2]->name) {
+            ui->map_button->setDisabled(false);
+            return;
+        }
+    }
+    ui->map_button->setDisabled(true);
+//    ui->map_button->setEnabled(inventory[ItemType::KEY_ITEM].contains(items[2]));
 }
 
 void MainWindow::setHeroName(QString name) {

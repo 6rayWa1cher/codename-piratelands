@@ -61,7 +61,7 @@
       <property name="geometry">
        <rect>
         <x>270</x>
-        <y>440</y>
+        <y>460</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -74,7 +74,7 @@
       <property name="geometry">
        <rect>
         <x>270</x>
-        <y>550</y>
+        <y>520</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -86,7 +86,7 @@
      <widget class="QPushButton" name="west">
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>190</x>
         <y>490</y>
         <width>75</width>
         <height>23</height>
@@ -99,7 +99,7 @@
      <widget class="QPushButton" name="east">
       <property name="geometry">
        <rect>
-        <x>390</x>
+        <x>350</x>
         <y>490</y>
         <width>75</width>
         <height>23</height>
@@ -152,7 +152,20 @@
        </rect>
       </property>
       <property name="text">
-       <string>магаз</string>
+       <string>Магазин</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="map_button">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>440</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Карта</string>
       </property>
      </widget>
     </widget>
@@ -380,14 +393,13 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menu_2">
     <property name="title">
-     <string>Файл</string>
+     <string>Справка</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
+    <addaction name="copyright_action"/>
    </widget>
-   <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <action name="action">
    <property name="text">
@@ -397,6 +409,11 @@
   <action name="action_2">
    <property name="text">
     <string>Загрузить</string>
+   </property>
+  </action>
+  <action name="copyright_action">
+   <property name="text">
+    <string>Об игре</string>
    </property>
   </action>
  </widget>

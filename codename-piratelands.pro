@@ -21,6 +21,7 @@ SOURCES += \
     battlelostwindow.cpp \
     battlewindow.cpp \
     battlewonwindow.cpp \
+    copyrightwindow.cpp \
     enemystatsmodel.cpp \
     game.cpp \
     hero.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
     itemmapmodel.cpp \
     main.cpp \
     mainwindow.cpp \
+    mapwindow.cpp \
     shop.cpp \
     shopwindow.cpp \
     world.cpp
@@ -39,6 +41,7 @@ HEADERS += \
     battlelostwindow.h \
     battlewindow.h \
     battlewonwindow.h \
+    copyrightwindow.h \
     enemystatsmodel.h \
     game.h \
     hero.h \
@@ -46,6 +49,7 @@ HEADERS += \
     itemcollectedwindow.h \
     itemmapmodel.h \
     mainwindow.h \
+    mapwindow.h \
     shop.h \
     shopwindow.h \
     world.h
@@ -54,8 +58,10 @@ FORMS += \
     battlelostwindow.ui \
     battlewindow.ui \
     battlewonwindow.ui \
+    copyrightwindow.ui \
     itemcollectedwindow.ui \
     mainwindow.ui \
+    mapwindow.ui \
     shopwindow.ui
 
 # Default rules for deployment.
@@ -64,7 +70,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    resources/range_weapon_image.png
+    resources/fogE1.png \
+    resources/island1.png \
+    resources/island2.png \
+    resources/island3.png \
+    resources/island4.png \
+    resources/islandE1.png \
+    resources/map.png \
+    resources/sea.png \
+    resources/treasure.png
 
 RESOURCES += \
-    range_weapon.qrc
+    RoomImages.qrc

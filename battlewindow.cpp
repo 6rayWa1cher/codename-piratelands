@@ -10,8 +10,8 @@ BattleWindow::BattleWindow(QWidget *parent, std::shared_ptr<Game> game) :
     _bww(this),
     _blw(),
     _model(this, game),
-    _heroStatsModel(this, game->_hero),
-    _enemyStatsModel(this, game->_hero),
+    _heroStatsModel(this, game->_hero, false),
+    _enemyStatsModel(this, game->_hero, false),
     ui(new Ui::BattleWindow)
 {
     _bww.setFixedSize(_bww.size());
