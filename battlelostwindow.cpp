@@ -7,6 +7,7 @@ battlelostwindow::battlelostwindow(QWidget *parent) :
 {
     ui->setupUi(this);
     QObject::connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(_continue()));
+    setWindowFlag(Qt::WindowStaysOnTopHint, true);
 }
 
 battlelostwindow::~battlelostwindow() {

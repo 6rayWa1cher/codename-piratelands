@@ -42,6 +42,7 @@ BattleWindow::BattleWindow(QWidget *parent, std::shared_ptr<Game> game) :
     QObject::connect(&*game->_battle, SIGNAL(battleOver(std::shared_ptr<Enemy>, BattleWonResult)), this, SLOT(battleIsOver(std::shared_ptr<Enemy>, BattleWonResult)));
     QObject::connect(&_bww, SIGNAL(accepted()), this, SLOT(fullEndBattle()));
     QObject::connect(&_blw, SIGNAL(accepted()), this, SLOT(fullEndBattle()));
+    setWindowFlag(Qt::WindowStaysOnTopHint, true);
 }
 
 BattleWindow::~BattleWindow() {

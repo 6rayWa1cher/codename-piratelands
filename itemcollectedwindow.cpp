@@ -7,6 +7,7 @@ ItemCollectedWindow::ItemCollectedWindow(QWidget *parent, std::shared_ptr<Item> 
 {
     ui->setupUi(this);
     ui->item_name->setText(item->name);
+    setWindowFlag(Qt::WindowStaysOnTopHint, true);
 }
 
 ItemCollectedWindow::~ItemCollectedWindow() {

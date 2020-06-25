@@ -14,7 +14,7 @@ ItemMapModel::ItemMapModel(QObject *parent,
 {
     if (toShow.empty()) {
         _toShow = QList<ItemType>();
-        for (int i = 0; i < int(LAST_ITEM_TYPE); ++i) {
+        for (int i = 0; i <= int(LAST_ITEM_TYPE); ++i) {
             _toShow.push_back(ItemType(i));
         }
     } else {

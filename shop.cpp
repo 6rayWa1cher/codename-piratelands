@@ -6,7 +6,7 @@ QMap<ItemType, QList<std::shared_ptr<Item> > > Shop::globalShop() const
 }
 
 Shop::Shop(QObject *parent) : QObject(parent) {
-    for (int i = 0; i < int(LAST_ITEM_TYPE); ++i) {
+    for (int i = 0; i <= int(LAST_ITEM_TYPE); ++i) {
         _globalShop[ItemType(i)] = QList<std::shared_ptr<Item>>();
     }
 }
@@ -48,12 +48,12 @@ void Shop::addItem(std::shared_ptr<Item> item) {
     }
     if (i == itemGroupInShop.size()) {
         itemGroupInShop.push_back(item);
-    } else {
+    }/* else {
         if(item->getType() == ItemType::SHIP_CONSUMABLE) return;
         auto newItem = item->changeAmount(1);
         removeItem(itemGroupInShop[i]);
         itemGroupInShop.append(newItem);
-    }
+    }*/ // Не раскомментировать, убьёт
     emit shopChanged(_globalShop);
 }
 

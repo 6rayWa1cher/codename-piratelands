@@ -13,7 +13,6 @@ KeyItem::KeyItem(QString name, QString description, uint32_t price) :
 
 }
 
-
 ItemType KeyItem::getType() const noexcept {
     return ItemType::KEY_ITEM;
 }
@@ -129,7 +128,7 @@ ItemType ShipSail::getType() const noexcept {
 }
 
 MapPiece::MapPiece(int partNumber) :
-    KeyItem(("Карта часть#" + std::to_string(partNumber)).c_str(),
+    KeyItem(("Карта часть #" + std::to_string(partNumber)).c_str(),
             (partNumber == 1 ? "От Ямайки на восток до суши..." : "затем на юг."),
             0) {
 
@@ -227,4 +226,13 @@ bool operator==(const Item &i1, const Item &i2) {
 
 bool operator!=(const Item &i1, const Item &i2) {
     return !(i1 == i2);
+}
+
+Map::Map(QString name, QString description, uint32_t price)
+    : KeyItem(name, description, price) {
+
+}
+
+void Map::use(std::shared_ptr<Game> game) const {
+    // TODO
 }

@@ -23,6 +23,7 @@ ShopWindow::ShopWindow(QWidget *parent, std::shared_ptr<Game> game) :
     QObject::connect(ui->shopTable, SIGNAL(doubleClicked(const QModelIndex &)), &_shopItemModel, SLOT(onTableClicked(const QModelIndex &)));
     QObject::connect(ui->playerTable, SIGNAL(doubleClicked(const QModelIndex &)), &_sellItemModel, SLOT(onTableClicked(const QModelIndex &)));
     QObject::connect(&*game->_hero, SIGNAL(money_changed(int)), this, SLOT(moneyChanged(int)));
+    setWindowFlag(Qt::WindowStaysOnTopHint, true);
 }
 
 ShopWindow::~ShopWindow() {

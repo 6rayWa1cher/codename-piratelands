@@ -132,7 +132,7 @@ void World::init() {
     _rooms.append(std::make_shared<Island>(this, "Остров Куба, Испания", "Лучший ром на всем архипелаге!", 1, 8, 13, 6,
                                            [](Island* island, std::shared_ptr<Hero> hero) {
                       if (island->firstTimeStep()) {
-                          island->_world->grantItem(hero, std::make_shared<MapPiece>(1));
+                          island->_world->grantItem(hero, std::dynamic_pointer_cast<MapPiece>(items[0]));
                       }
                   },
                   [](Island*, std::shared_ptr<Hero>) {}
@@ -154,7 +154,7 @@ void World::init() {
                       12, 19, 0, 23,
                       [](Island* island, std::shared_ptr<Hero> hero) {
                         if (island->firstTimeStep()) {
-                            island->_world->grantItem(hero, std::make_shared<MapPiece>(2));
+                            island->_world->grantItem(hero, std::dynamic_pointer_cast<MapPiece>(items[1]));
                         }
                       },
                   [](Island*, std::shared_ptr<Hero>) {}
@@ -167,10 +167,10 @@ void World::init() {
 //                      if (island->firstTimeStep()) {
                           island->_world->sendEncounter(EncounterType::SEA, std::make_shared<Enemy> (
                           "Пират", island->_world->shared_from_this(), 120, 100,
-                          std::make_shared<ShipBoardingTeam>("Корабельные крысы", "Бухие оборванцы", 20, 50),
-                          std::make_shared<ShipCannons>("Бомбарды", "Ужасные пушки", 20, 30, 1, 250),
-                          std::make_shared<ShipHull>("Деревянный корпус", "Легкий корпус быстрого корабля", 120, 25, 0, 0, 1, 0, 2500),
-                          std::make_shared<ShipSail>("2-х мачтовый", "Стандартные паруса", 41, 35, 50)
+                          std::dynamic_pointer_cast<ShipBoardingTeam>(items[10]),
+                          std::dynamic_pointer_cast<ShipCannons>(items[7]),
+                          std::dynamic_pointer_cast<ShipHull>(items[13]),
+                          std::dynamic_pointer_cast<ShipSail>(items[16])
                           ));
 //                      }
                   },
