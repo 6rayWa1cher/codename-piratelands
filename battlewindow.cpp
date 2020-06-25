@@ -43,6 +43,7 @@ BattleWindow::BattleWindow(QWidget *parent, std::shared_ptr<Game> game) :
     QObject::connect(&_bww, SIGNAL(accepted()), this, SLOT(fullEndBattle()));
     QObject::connect(&_blw, SIGNAL(accepted()), this, SLOT(fullEndBattle()));
     setWindowFlag(Qt::WindowStaysOnTopHint, true);
+    QObject::connect(&*game->_battle, SIGNAL(turnOver()), this, SLOT(turnOver()));
 }
 
 BattleWindow::~BattleWindow() {
@@ -56,15 +57,41 @@ void BattleWindow::closeEvent(QCloseEvent * event) {
 void BattleWindow::updateUi() {
     std::shared_ptr<Enemy> enemy = _game->_battle->currentEnemy();
     std::shared_ptr<Hero> hero = _game->_hero;
+    std::shared_ptr<Battle> battle = _game->_battle;
     ui->enemy_label->setText(enemy->name());
     ui->enemy_health->setRange(0, enemy->maxHealth());
     ui->enemy_health->setValue(enemy->health());
     ui->hero_label->setText(hero->name());
     ui->hero_health->setRange(0, hero->maxHealth());
     ui->hero_health->setValue(hero->health());
+    turnOver();
 }
 
-void BattleWindow::fullEndBattle() {
+void BattleWindow::turnOver()
+{
+    std::shared_ptr<Battle> battle = _game->_battle;
+    if (battle->heroEffect()) {
+        ui->hero_effect->setText(battle->heroEffect()->name());
+        ui->hero_effect->setToolTip(battle->heroEffect()->description());
+        ui->hero_effect_steps->setText(std::to_string(battle->heroEffectTurnsLeft()).c_str());
+    } else {
+        ui->hero_effect->setText("");
+        ui->hero_effect->setToolTip("");
+        ui->hero_effect_steps->setText("");
+    }
+    if (battle->enemyEffect()) {
+        ui->enemy_effect->setText(battle->enemyEffect()->name());
+        ui->enemy_effect->setToolTip(battle->enemyEffect()->description());
+        ui->enemy_effect_steps->setText(std::to_string(battle->enemyEffectTurnsLeft()).c_str());
+    } else {
+        ui->enemy_effect->setText("");
+        ui->enemy_effect->setToolTip("");
+        ui->enemy_effect_steps->setText("");
+    }
+}
+
+void BattleWindow::fullEndBattle()
+{
     hide();
     setDisabled(false);
     emit battleReleased();
@@ -98,7 +125,10 @@ void BattleWindow::battleIsOver(std::shared_ptr<Enemy> enemy, BattleWonResult re
         setDisabled(true);
         _bww.show(result);
     } else {
-        _blw.show();
+        // escape?
+        if (_game->_hero->currentRoom() == 15) {
+            _blw.show();
+        }
         fullEndBattle();
     }
 }

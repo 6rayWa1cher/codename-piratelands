@@ -20,10 +20,34 @@ bool Battle::isBattle() const noexcept {
 void Battle::startBattle(std::shared_ptr<Enemy> enemy) {
     _currentEnemy = enemy;
     _stepNumber = 1;
+    _heroEffect = nullptr;
+    _heroEffectTurnsLeft = 0;
+    _enemyEffect = nullptr;
+    _enemyEffectTurnsLeft = 0;
 }
 
 std::shared_ptr<Enemy> Battle::currentEnemy() const {
     return _currentEnemy;
+}
+
+std::shared_ptr<BattleItemEffect> Battle::heroEffect() const
+{
+    return _heroEffect;
+}
+
+int8_t Battle::heroEffectTurnsLeft() const
+{
+    return _heroEffectTurnsLeft;
+}
+
+std::shared_ptr<BattleItemEffect> Battle::enemyEffect() const
+{
+    return _enemyEffect;
+}
+
+int8_t Battle::enemyEffectTurnsLeft() const
+{
+    return _enemyEffectTurnsLeft;
 }
 
 uint8_t Battle::genAndNormalize(uint8_t mostCommonValue, uint8_t max) {
@@ -32,6 +56,23 @@ uint8_t Battle::genAndNormalize(uint8_t mostCommonValue, uint8_t max) {
     if (p < 0) p = 0;
     if (p > max) p = max;
     return p;
+}
+
+uint8_t Battle::appendEffectOn(StatsType type, uint8_t raw, std::shared_ptr<Enemy> entity)
+{
+    if (entity == _game->_hero) {
+        if (_heroEffect && _heroEffect->getType() == EffectType::STATS) {
+            return std::dynamic_pointer_cast<StatsEffect>(_heroEffect)->apply(_game->_hero, raw, type);
+        } else {
+            return raw;
+        }
+    } else {
+        if (_enemyEffect && _enemyEffect->getType() == EffectType::STATS) {
+            return std::dynamic_pointer_cast<StatsEffect>(_enemyEffect)->apply(_currentEnemy, raw, type);
+        } else {
+            return raw;
+        }
+    }
 }
 
 int Battle::tryAttack(std::shared_ptr<Enemy> attacker, std::shared_ptr<Enemy> defender) {
@@ -68,9 +109,13 @@ int Battle::tryBoarding(std::shared_ptr<Enemy> attacker, std::shared_ptr<Enemy> 
         return 0;
     }
     emit battleEvent("Абордаж начался!");
-    uint8_t attackerBoardingPower = attacker->team()->baseBoardingPower * (100 - attacker->hull()->boardingPowerDecreasement) / 100;
+    uint8_t attackerBoardingPower = appendEffectOn(StatsType::BP,
+                                                   attacker->team()->baseBoardingPower * (100 - attacker->hull()->boardingPowerDecreasement) / 100,
+                                                   attacker);
     uint8_t p3 = genAndNormalize(0.75 * attackerBoardingPower, attackerBoardingPower);
-    uint8_t defenderBoardingPower = defender->team()->baseBoardingPower * (100 - defender->hull()->boardingPowerDecreasement) / 100;
+    uint8_t defenderBoardingPower = appendEffectOn(StatsType::BP,
+                                                   defender->team()->baseBoardingPower * (100 - defender->hull()->boardingPowerDecreasement) / 100,
+                                                   defender);
     uint8_t p4 = genAndNormalize(0.75 * defenderBoardingPower, defenderBoardingPower);
     if (p3 < p4) {
         emit battleEvent(QString("Абордаж не увенчался успехом! ") + std::to_string(p3).c_str() + "<" + std::to_string(p4).c_str());
@@ -101,7 +146,6 @@ void Battle::heroWon() {
     _game->_hero->changeMoney(_currentEnemy->money());
     bwr.gold = _currentEnemy->money();
     uint8_t p1 = genAndNormalize(70, 100);
-    std::cout << std::to_string(p1) << std::endl;
     if (p1 >= 75) {
         uint8_t t = std::uniform_int_distribution<>((int) ItemType::SHIP_BOARDING_TEAM, (int) ItemType::SHIP_SAIL)(_gen);
         std::shared_ptr<Item> item;
@@ -157,7 +201,61 @@ void Battle::enemyTurn() {
         switch (result) {
         case 0:
         case 1:
-            emit turnOver();
+            if (_heroEffect) {
+                if (_heroEffect->getType() == EffectType::AFTER_MOVE_ACTION) {
+                    QString action = std::dynamic_pointer_cast<AfterMoveEffect>(_heroEffect)->apply(_game->_hero);
+                    if (_heroEffectTurnsLeft != -1) {
+                        emit battleEvent("Эффект " + _heroEffect->name() + " на " + _game->_hero->name() +
+                                         "(осталось " + std::to_string(_heroEffectTurnsLeft - 1).c_str() + " ходов): "
+                                         + action);
+                    } else {
+                        emit battleEvent("Эффект " + _heroEffect->name() + " на " + _game->_hero->name() + ": "
+                                         + action);
+                    }
+                }
+                switch (_heroEffectTurnsLeft) {
+                case -1:
+                    break;
+                case 0:
+                case 1:
+                    _heroEffect = nullptr;
+                    _heroEffectTurnsLeft = 0;
+                    break;
+                default:
+                    _heroEffectTurnsLeft -= 1;
+                }
+            }
+            if (_enemyEffect) {
+                if (_enemyEffect->getType() == EffectType::AFTER_MOVE_ACTION) {
+                    QString action = std::dynamic_pointer_cast<AfterMoveEffect>(_enemyEffect)->apply(_currentEnemy);
+                    if (_heroEffectTurnsLeft != -1) {
+                        emit battleEvent("Эффект " + _enemyEffect->name() + " на " + _currentEnemy->name() +
+                                         "(осталось " + std::to_string(_enemyEffectTurnsLeft - 1).c_str() + " ходов): "
+                                         + action);
+                    } else {
+                        emit battleEvent("Эффект " + _enemyEffect->name() + " на " + _currentEnemy->name() + ": "
+                                         + action);
+                    }
+                }
+                switch (_enemyEffectTurnsLeft) {
+                case -1:
+                    break;
+                case 0:
+                case 1:
+                    _enemyEffect = nullptr;
+                    _enemyEffectTurnsLeft = 0;
+                    break;
+                default:
+                    _enemyEffectTurnsLeft -= 1;
+                }
+            }
+            if (_currentEnemy->health() == 0) {
+                heroWon();
+            } else if (_game->_hero->health() == 0) {
+                heroLost();
+            } else {
+                emit turnOver();
+            }
             break;
         case 2:
             heroLost();
@@ -192,9 +290,22 @@ void Battle::boarding() {
     }
 }
 
-void Battle::clickItem(std::shared_ptr<Item> item) {
-    emit battleEvent(_game->_hero->name() + " применил предмет " + item->name);
-    std::dynamic_pointer_cast<ShipConsumable>(item)->consume(&*(_game->_hero));
+void Battle::clickItem(std::shared_ptr<Item> item)
+{
+    std::shared_ptr<Hero> hero = _game->_hero;
+    emit battleEvent(hero->name() + " применил предмет " + item->name);
+    auto ret = std::dynamic_pointer_cast<ShipConsumable>(item)->consume(&*(hero));
+    hero->removeItem(item);
+    if(ret.consumeResult) hero->addItem(ret.consumeResult);
+    if(ret.makeEffect) {
+        if (ret.effectOnOther) {
+            _enemyEffect = ret.makeEffect;
+            _enemyEffectTurnsLeft = ret.effectTurns;
+        } else {
+            _heroEffect = ret.makeEffect;
+            _heroEffectTurnsLeft = ret.effectTurns;
+        }
+    }
     enemyTurn();
 }
 

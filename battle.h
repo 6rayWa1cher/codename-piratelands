@@ -1,6 +1,7 @@
 #ifndef BATTLE_H
 #define BATTLE_H
 
+#include "battleitemeffect.h"
 #include "hero.h"
 
 #include <QObject>
@@ -25,7 +26,12 @@ private:
     std::random_device _rd;
     std::mt19937 _gen;
     int _stepNumber = -1;
+    std::shared_ptr<BattleItemEffect> _heroEffect = nullptr;
+    int8_t _heroEffectTurnsLeft = 0;
+    std::shared_ptr<BattleItemEffect> _enemyEffect = nullptr;
+    int8_t _enemyEffectTurnsLeft = 0;
     uint8_t genAndNormalize(uint8_t mostCommonValue, uint8_t max = 100);
+    uint8_t appendEffectOn(StatsType type, uint8_t raw, std::shared_ptr<Enemy> entity);
     int tryAttack(std::shared_ptr<Enemy> attacker, std::shared_ptr<Enemy> defender);
     int tryBoarding(std::shared_ptr<Enemy> attacker, std::shared_ptr<Enemy> defender);
     int tryFlee(std::shared_ptr<Enemy> runner, std::shared_ptr<Enemy> chaser);
@@ -42,6 +48,14 @@ public:
     std::shared_ptr<Enemy> currentEnemy() const;
 
     const QList<QString>& logs() const;
+
+    std::shared_ptr<BattleItemEffect> heroEffect() const;
+
+    int8_t heroEffectTurnsLeft() const;
+
+    std::shared_ptr<BattleItemEffect> enemyEffect() const;
+
+    int8_t enemyEffectTurnsLeft() const;
 
 signals:
     void turnOver();

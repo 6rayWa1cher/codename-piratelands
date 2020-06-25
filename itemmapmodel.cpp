@@ -140,6 +140,7 @@ CharacteristicsItemModel::CharacteristicsItemModel(QObject *parent,
 void CharacteristicsItemModel::onTableClicked(const QModelIndex& index) {
     if (index.isValid()) {
         std::shared_ptr<Item> item = getItemFromIndex(index);
+        ShipConsumableReturn ret;
         switch (item->getType()) {
         case ItemType::SHIP_HULL:
         case ItemType::SHIP_SAIL:
@@ -149,7 +150,10 @@ void CharacteristicsItemModel::onTableClicked(const QModelIndex& index) {
             emit stat_changed();
             break;
         case ItemType::SHIP_CONSUMABLE:
-            std::dynamic_pointer_cast<ShipConsumable>(item)->consume(&*_hero);
+            ret = std::dynamic_pointer_cast<ShipConsumable>(item)->consume(&*_hero);
+            _hero->removeItem(item);
+            if(ret.consumeResult) _hero->addItem(ret.consumeResult);
+            break;
         default:
             break;
         }

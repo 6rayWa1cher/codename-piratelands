@@ -34,6 +34,7 @@ private:
 signals:
     void battleReleased();
 public slots:
+    void turnOver();
     void fullEndBattle();
     void startEncount(EncounterType type, std::shared_ptr<Enemy> enemy);
     void battleIsOver(std::shared_ptr<Enemy> enemy, BattleWonResult result);
