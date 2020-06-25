@@ -146,7 +146,7 @@ void Battle::heroWon() {
     _game->_hero->changeMoney(_currentEnemy->money());
     bwr.gold = _currentEnemy->money();
     uint8_t p1 = genAndNormalize(70, 100);
-    if (true) {
+    if (p1 >= 75) {
         uint8_t t = std::uniform_int_distribution<>((int) ItemType::SHIP_BOARDING_TEAM, (int) ItemType::SHIP_SAIL)(_gen);
         std::shared_ptr<Item> item;
         switch (t) {
